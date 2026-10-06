@@ -32,21 +32,21 @@ For any claim that involves the following categories, you MUST verify with autho
 
 ---
 
-## 4-Pillar Phased Workflow (Token & Context Optimized)
+## Sequential Steps Workflow (Token & Context Optimized)
 
-Instead of parallelizing unverified queries, follow this sequential 4-pillar pipeline:
+Instead of parallelizing unverified queries, follow this sequential 5-step pipeline:
 
 ```mermaid
 flowchart TD
-    Req[User Request] --> Init[0. Route & Constraints Extraction]
-    Init --> P1["Pillar 1: Visa & Legal Feasibility<br/>(@cancilleria-scanner / travel-requirements)"]
-    P1 -->|If Feasible| P2["Pillar 2: Places, Culture & Route Mapping<br/>(travel-route-mapping + @weather-transport-researcher)"]
-    P2 --> P3["Pillar 3: Flights & Transit Connections<br/>(Origin Colombia: BOG/MDE -> Destination)"]
-    P3 --> P4["Pillar 4: Price Scouting & Live Currency<br/>(travel-price-scouting: Kayak, Booking, Airbnb)"]
-    P4 --> Rep[Final Unified Trip Report]
+    Req[User Request] --> S1[Step 1: Clarification & Route Extraction]
+    S1 --> S2["Step 2: Visa & Legal Feasibility<br/>(@cancilleria-scanner / travel-requirements)"]
+    S2 -->|If Feasible| S3["Step 3: Places, Culture & Route Mapping<br/>(travel-route-mapping + @weather-transport-researcher)"]
+    S3 --> S4["Step 4: Flights & Transit Connections<br/>(Origin Colombia: BOG/MDE -> Destination)"]
+    S4 --> S5["Step 5: Price Scouting & Live Currency<br/>(travel-price-scouting: Kayak, Booking, Airbnb)"]
+    S5 --> Rep[Final Unified Trip Report]
 ```
 
-### Phase 0: Extraction & Clarification Gate
+### Step 1: Extraction & Clarification Gate
 1. Invoke [@destination-researcher](./destination-researcher.md) to parse destinations, stops order, dates/season, and traveler preferences.
 2. If critical parameters are missing (travel month/dates, travel purpose), ask the user concisely before launching deep research:
    ```markdown
@@ -56,7 +56,7 @@ flowchart TD
    - Estimated budget or travel style (backpacker / mid-range / comfort)
    ```
 
-### Pillar 1: Visa & Entry Requirements (Cancillería Gate)
+### Step 2: Visa & Entry Requirements (Cancillería Gate)
 - **Action**: Check travel permissions for Colombian passport holders using [@cancilleria-scanner](./cancilleria-scanner.md) and the [travel-requirements](../skills/travel-requirements/SKILL.md) skill.
 - **Verification**:
   - Entry status: Visa-free, eVisa, Visa on Arrival, or Consular Visa required.
@@ -65,20 +65,20 @@ flowchart TD
   - Passport validity constraint (must have ≥ 6 months validity from departure date).
   - *Hard Stop*: If a visa is impossible within the user's dates, alert immediately before researching hotels.
 
-### Pillar 2: Places, Culture & Route Mapping
+### Step 3: Places, Culture & Route Mapping
 - **Action**: Toggles the [travel-route-mapping](../skills/travel-route-mapping/SKILL.md) skill and [@weather-transport-researcher](./weather-transport-researcher.md).
 - **Deliverables**:
   - Clean Google Maps route links (`/dir/?api=1&origin=...`) and station/neighborhood searches.
   - Curated key sights, historical landmarks, museums, and local culinary specialties.
   - Seasonal weather, packing advice, and day-by-day pacing with recovery buffers.
 
-### Pillar 3: Flights & Transit Connections
+### Step 4: Flights & Transit Connections
 - **Action**: Evaluate realistic flight corridors from Colombia (typically BOG El Dorado or MDE José María Córdova).
 - **Deliverables**:
   - Operating airlines and realistic route corridors.
   - Transit hub scrutiny: warn if a connection requires a transit visa (e.g., layovers in the US, UK, or Schengen area without appropriate visas).
 
-### Pillar 4: Price Scouting & Currency Conversion
+### Step 5: Price Scouting & Currency Conversion
 - **Action**: Activate the [travel-price-scouting](../skills/travel-price-scouting/SKILL.md) skill.
 - **Deliverables**:
   - Flight price ranges (Kayak / Google Flights).
@@ -133,6 +133,6 @@ Produce the final trip report adhering to this markdown structure:
 ---
 
 ## Guardrails
-- Keep context clean: only load skills required for the active phase.
+- Keep context clean: only load skills required for the active step.
 - Do not invent fixed prices or exchange rates: always provide indicative ranges and live-fetched TRM rates.
 - Immigration and visa feasibility for Colombian citizens is the top priority.
