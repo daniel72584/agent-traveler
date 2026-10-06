@@ -18,18 +18,18 @@ To keep execution clean and token-efficient, this skill delegates the heavy lift
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Customer as Usuario / Cliente
-    participant Skill as Skill (Coordinador)
-    participant Agent as Agente @cancilleria-scanner
+    actor Customer as User / Traveler
+    participant Skill as Skill (Coordinator)
+    participant Agent as Agent @cancilleria-scanner
     
-    Customer->>Skill: "Quiero viajar a Kazajistán y Turquía"
-    Note over Skill: Compuerta Obligatoria: ¿Propósito?
-    Skill->>Customer: "¿Viajas como turista, trabajador, estudiante u otro motivo?"
-    Customer->>Skill: "Como turista"
-    Skill->>Agent: Dispara agente con países y propósito confirmado
-    Note over Agent: Ejecuta protocolo autónomo (Caché -> Buscador -> Web -> Browser)
-    Agent-->>Skill: Reporte comparativo oficial sintetizado
-    Skill-->>Customer: Presenta reporte al usuario
+    Customer->>Skill: "I want to travel to Kazakhstan and Turkey"
+    Note over Skill: Mandatory Gate: Purpose?
+    Skill->>Customer: "Are you traveling as a tourist, worker, student, or other?"
+    Customer->>Skill: "As a tourist"
+    Skill->>Agent: Trigger agent with confirmed countries and purpose
+    Note over Agent: Runs autonomous protocol (Live Search -> Web -> Browser)
+    Agent-->>Skill: Official synthesized comparative report
+    Skill-->>Customer: Present report to user
 ```
 
 ---
@@ -37,15 +37,15 @@ sequenceDiagram
 ## Step 1: Clarification Gate (Zero Assumptions)
 
 When the user asks about traveling to one or more countries, check if the query includes the **traveler's purpose**:
-- `tourist` (vacaciones, turismo, visitas cortas)
-- `worker` (empleo formal, contratos laborales, prestación de servicios)
-- `student` (estudios académicos, intercambios)
-- `business` (negocios, inversiones)
+- `tourist` (vacations, sightseeing, short visits)
+- `worker` (formal employment, work contracts, professional services)
+- `student` (academic studies, student exchanges)
+- `business` (business meetings, investments)
 
 > [!CRITICAL]
 > If the travel purpose is **NOT** specified, **DO NOT TRIGGER THE AGENT YET**.
 > Ask the user first:
-> *"Para verificar las exigencias exactas de visa y permanencia en Cancillería, ¿viajarás como **turista**, **trabajador**, **estudiante** u otro motivo?"*
+> *"To verify official visa and stay requirements with Cancillería, will you be traveling as a **tourist**, **worker**, **student**, or other purpose?"*
 
 ---
 
@@ -54,9 +54,9 @@ When the user asks about traveling to one or more countries, check if the query 
 Once the purpose and country list are confirmed, launch the dedicated [cancilleria-scanner](../../agents/cancilleria-scanner.md) agent with the following parameters:
 
 ```text
-Target Countries: <Lista de países, ej. "Kazajistán, Turquía, Unión Europea">
+Target Countries: <List of countries, e.g. "Kazakhstan, Turkey, European Union">
 Travel Purpose: <tourist | worker | student | business>
-Origin Nationality: Colombiana (pasaporte ordinario)
+Origin Nationality: Colombian (ordinary passport)
 Agent Specification: .agents/agents/cancilleria-scanner.md
 ```
 

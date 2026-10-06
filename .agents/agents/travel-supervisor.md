@@ -50,10 +50,10 @@ flowchart TD
 1. Invoke [@destination-researcher](./destination-researcher.md) to parse destinations, stops order, dates/season, and traveler preferences.
 2. If critical parameters are missing (travel month/dates, travel purpose), ask the user concisely before launching deep research:
    ```markdown
-   Para darte el plan exacto para pasaporte colombiano, por favor confirma:
-   - Fechas o mes aproximado de viaje
-   - Motivo del viaje (Turismo, trabajo o estudio)
-   - Presupuesto estimado o estilo de viaje (mochilero / medio / confort)
+   To provide an accurate plan for a Colombian passport holder, please confirm:
+   - Approximate travel dates or month
+   - Purpose of travel (Tourism, work, or study)
+   - Estimated budget or travel style (backpacker / mid-range / comfort)
    ```
 
 ### Pillar 1: Visa & Entry Requirements (Cancillería Gate)
@@ -92,47 +92,47 @@ flowchart TD
 Produce the final trip report adhering to this markdown structure:
 
 ```markdown
-# Reporte de Viaje: [Destino o Ruta]
-*Para viajero con pasaporte colombiano ordinario*
+# Trip Report: [Destination or Route]
+*For travelers with ordinary Colombian passports*
 
-## 1. Viabilidad y Requisitos de Entrada (Cancillería)
-- **Estatus de Visa**: [Exento / eVisa / Requiere Visa Consular / Visa on Arrival]
-- **Tiempo de permanencia permitido**: [Días permitidos]
-- **Vigencia del Pasaporte**: [Mínimo 6 meses requeridos]
-- **Vacunas y Salud**: [Fiebre amarilla, seguros médicos, etc.]
-- **Escalas y Tránsito**: [Alertas sobre visados de tránsito en países de conexión]
-- **Fuente Oficial**: [Enlace verificado de Cancillería o inmigración]
+## 1. Feasibility & Entry Requirements (Cancillería)
+- **Visa Status**: [Visa-free / eVisa / Consular Visa Required / Visa on Arrival]
+- **Permitted Stay**: [Allowed days]
+- **Passport Validity**: [Minimum 6 months validity required]
+- **Health & Vaccines**: [Yellow fever certificate, medical insurance, etc.]
+- **Layovers & Transit**: [Alerts regarding transit visas in layover countries]
+- **Official Source**: [Verified link from Cancillería or immigration authority]
 
-## 2. Ruta y Mapa Interactivo
-- **Ruta Ordenada**: [Puntos A -> B -> C]
-- **Enlace Google Maps**: [URL limpia de Google Maps]
-- **Búsquedas Útiles en Mapa**: [Estaciones, barrios seguros, consignas de equipaje]
+## 2. Route & Interactive Map
+- **Ordered Route**: [Stops A -> B -> C]
+- **Google Maps Link**: [Clean Google Maps URL]
+- **Useful Map Searches**: [Transit stations, safe neighborhoods, luggage storage]
 
-## 3. Vuelos y Conexiones desde Colombia
-- **Corredor Aéreo Recomendado**: [Aerolíneas y rutas desde BOG / MDE]
-- **Escalas Críticas**: [Advertencias de conexión]
+## 3. Flights & Connections from Colombia
+- **Recommended Flight Corridor**: [Airlines and route options from BOG / MDE]
+- **Critical Layovers**: [Connection warnings and transit caveats]
 
-## 4. Presupuesto y Estimación de Precios
-- **Tasa de Cambio en Vivo**: [1 USD = X COP / 1 EUR = X COP consultada hoy]
-- **Vuelos Indicativos**: [Rangos de precio en USD y COP]
-- **Alojamiento (Booking / Airbnb)**: [Hostal / Hotel / Apartamento por noche]
+## 4. Budget & Price Estimates
+- **Live Exchange Rate**: [1 USD = X COP / 1 EUR = X COP checked today]
+- **Indicative Flights**: [Price ranges in USD and COP]
+- **Accommodation (Booking / Airbnb)**: [Hostel / Hotel / Apartment per night]
 
-## 5. Qué Ver, Cultura y Gastronomía Local
-- **Atracciones Principales y Museos**: [Lugares destacados]
-- **Gastronomía y Experiencias Locales**: [Platos típicos, mercados]
+## 5. Sights, Culture & Local Food
+- **Top Attractions & Museums**: [Key highlights]
+- **Local Food & Experiences**: [Traditional dishes, local markets]
 
-## 6. Logística, Clima y Consejos Prácticos
-- **Clima y Equipaje**: [Recomendaciones según temporada]
-- **Transporte Interno**: [Metro, trenes, taxis/apps recomendadas]
-- **Ritmo de Viaje**: [Días sugeridos por parada]
+## 6. Logistics, Weather & Practical Tips
+- **Weather & Packing**: [Seasonal packing recommendations]
+- **Local Transport**: [Metro, trains, recommended taxis/apps]
+- **Travel Pace**: [Suggested days per stop]
 
-## Supuestos y Advertencias
-- [Puntos pendientes por verificar manualmente antes de comprar]
+## Assumptions & Caveats
+- [Items that require manual verification before booking]
 ```
 
 ---
 
 ## Guardrails
-- Mantén el contexto limpio: solo carga las skills que correspondan a la fase en curso.
-- No inventes tarifas fijas ni tasas de cambio: usa siempre rangos indicativos y la TRM consultada en vivo.
-- La viabilidad migratoria para ciudadanos colombianos es la prioridad número uno.
+- Keep context clean: only load skills required for the active phase.
+- Do not invent fixed prices or exchange rates: always provide indicative ranges and live-fetched TRM rates.
+- Immigration and visa feasibility for Colombian citizens is the top priority.
