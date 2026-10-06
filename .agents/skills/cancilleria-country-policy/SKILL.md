@@ -1,15 +1,15 @@
 ---
 name: cancilleria-country-policy
 description: >-
-  Orchestrates country policy scanning on cancilleria.gov.co by triggering the dedicated cancilleria-scanner agent.
-  Mandatorily clarifies traveler purpose (tourist, worker, student) before launching the agent to avoid assumptions.
+  Checks official Colombian travel policy on cancilleria.gov.co by launching the cancilleria-scanner agent.
+  Always confirms the traveler's purpose (tourist, worker, student) first to give accurate advice.
 ---
 
 # Cancillería Country Policy Skill
 
-This skill acts as the entrypoint and coordinator for traveler policy inquiries regarding the Ministry of Foreign Affairs of Colombia ([Cancillería](https://www.cancilleria.gov.co)).
+This skill helps travelers find official travel advice and visa rules from Colombia's Ministry of Foreign Affairs ([Cancillería](https://www.cancilleria.gov.co)).
 
-To keep execution clean and token-efficient, this skill delegates the heavy lifting (web crawling, multi-tier escalation, and semantic parsing) to the dedicated [cancilleria-scanner](../../agents/cancilleria-scanner.md) agent.
+It works directly with the [cancilleria-scanner](../../agents/cancilleria-scanner.md) agent to check verified government requirements for each country on your itinerary.
 
 ---
 

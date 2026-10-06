@@ -6,7 +6,7 @@ description: >-
 
 # Travel Requirements
 
-Use this skill before giving visa, border, transit, or consular advice. Treat it as a source-quality workflow, not as legal advice with a backpack.
+Use this skill to verify official visa rules, passport validity, border transit, and health requirements before planning an international route. It relies on verified government authorities so travelers know exactly what documents are needed before departure.
 
 ## Required Inputs
 

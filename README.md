@@ -8,18 +8,19 @@ Is not going to schedule or pay the trip, the idea is just to give an accurate r
 of the trip, and the user can use it to plan their trip.
 
 
-The main agent is .agents/agents/travel-supervisor.md, which is going to be the router, who calls other skills (To gain some token reduction) which will be in charge of the main workflow
+## How It Works: Your Travel Team
 
+The planner uses specialized helpers to research each part of your journey:
 
-* .agents/agents/travel-supervisor.md: Agent Router, in charge of the main workflow, so, if you wanna add an additional step, here is the right place. 
+* **The Trip Coordinator (`.agents/agents/travel-supervisor.md`)**: Think of this as your main travel guide. It listens to what kind of trip you want, organizes the planning steps, and combines all findings into one clear, easy-to-read travel report.
 
-* .agents/agents/cancilleria-scanner.md Borders are tricky, we need visas despite of the technology, so this is the agent in charge of checking visas, and border requirements for colombian citizens. Supporting by .agents/skills/cancilleria-country-policy
+* **Visa & Border Checker (`.agents/agents/cancilleria-scanner.md` & `.agents/skills/cancilleria-country-policy`)**: Border rules can be tricky. This agent checks official entry rules, visas, and stay limits specifically for travelers with Colombian passports so you never have surprises at immigration.
 
-* .agents/agents/destination-researcher.md Fundamental for the idea of travelling, and the heart of this repo, this agent helps us to stablish a path check how we are going to reach and the path to follow in the trip. Supported by .agents/skills/travel-route-mapping
+* **Route & Destination Explorer (`.agents/agents/destination-researcher.md` & `.agents/skills/travel-route-mapping`)**: The map builder. It organizes your stops in a logical order, suggests authentic cultural sights, and creates clickable Google Maps routes connecting your journey.
 
-* .agents/agents/weather-transport-researcher.md Colombia is country with tropical weather, so the weather is not a big factor, just rainy or dry seasson, but arround the world there are different conditions, challenges, problems, according with the time of traveling, could be a dessert or a flood, this agent helps us to check those things, and give us an idea of what to expect.
+* **Weather & Transport Guide (`.agents/agents/weather-transport-researcher.md`)**: Traveling to unfamiliar climates can be challenging. This agent checks seasonal weather, tells you what to pack, and explains how to get around each city (trains, buses, metro, and reliable taxi apps).
 
-* .agents/skills/travel-price-scouting, we want to travel anywhere, but the real problem is, the money we have a budget for the trip. This agent check for the best deals around, the best routes and the best time to travel. 
+* **Price & Budget Scout (`.agents/skills/travel-price-scouting`)**: Keeps your trip on budget. It looks up indicative prices for flights and accommodations (hostels, guesthouses, or hotels) on Booking, Airbnb, and Kayak, always converting costs to Colombian Pesos (COP) using live exchange rates.
 
 ## Roadmap & TODOs
 * **Spec-Driven Development (SDD)**: Introduce an interactive interview step to formulate a validated `trip-spec` interview.
