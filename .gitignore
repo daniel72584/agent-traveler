@@ -219,3 +219,10 @@ __marimo__/
 
 # Grafeando AST Graph DB
 .grafeando_db
+.grafeando_kuzu*
+grafeando-graph.html
+
+# Local IDE and MCP configs
+.gemini/
+.agents/mcp_config.json
+
