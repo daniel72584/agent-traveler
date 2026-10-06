@@ -20,3 +20,8 @@ The main agent is .agents/agents/travel-supervisor.md, which is going to be the 
 * .agents/agents/weather-transport-researcher.md Colombia is country with tropical weather, so the weather is not a big factor, just rainy or dry seasson, but arround the world there are different conditions, challenges, problems, according with the time of traveling, could be a dessert or a flood, this agent helps us to check those things, and give us an idea of what to expect.
 
 * .agents/skills/travel-price-scouting, we want to travel anywhere, but the real problem is, the money we have a budget for the trip. This agent check for the best deals around, the best routes and the best time to travel. 
+
+## Roadmap & TODOs
+* **Spec-Driven Development (SDD)**: Introduce an interactive interview step to formulate a validated `trip-spec` interview.
+* **Agent Evals & Specs Tests**: Build automated spec/eval test suites using the Gemini SDK and Antigravity to validate the usage, (TBD How to create the test?)
+* **ADK Workflow Migration**: Evaluate the same approach using Google ADK (Agent Development Kit) for deterministic state machines, typed schemas, and session checkpointing. 
