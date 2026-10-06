@@ -73,17 +73,17 @@ If the page requires JavaScript tabs, accordions, or client-side rendering, trig
 
 ## 3. Semantic Reasoning Rules
 
-Apply intelligence over raw text (ignoring changes in Cancillería's wording):
-- **Turismo**:
-  - Exención de visa de corta duración (estancia de 30, 90 o 180 días).
-  - Requisitos de entrada: Pasaporte vigente (mínimo 3 a 6 meses), tiquete de salida, reserva/hospedaje, solvencia económica.
-  - Alertas migratorias: Prerregistros obligatorios (ETIAS/EES en la Unión Europea, e-Visas en Kenia, formularios electrónicos).
-- **Trabajo / Empleo**:
-  - **REGLA DE ORO**: Las exenciones de visa para turistas NO autorizan contratos ni actividades laborales remuneradas.
-  - Emitir dictamen: `Requiere Visa de Trabajo / Permiso Laboral`.
-  - Instruir al viajero a tramitar la visa ante la embajada o consulado respectivo antes de viajar.
-- **Representación Consular**:
-  - Indicar embajada residente o embajada concurrente (ej. Embajada en Moscú concurrente para Kazajistán; Embajada en Brasilia para Kazajistán en Colombia).
+Apply intelligence over raw text (handling variations in Cancillería's wording):
+- **Tourism**:
+  - Short-stay visa exemption (stays of 30, 90, or 180 days).
+  - Entry prerequisites: Valid passport (minimum 3 to 6 months), return/onward ticket, lodging reservation, financial solvency.
+  - Travel alerts: Mandatory pre-registration (e.g., ETIAS/EES in the European Union, e-Visas in Kenya, electronic entry forms).
+- **Work / Employment**:
+  - **GOLDEN RULE**: Tourist visa exemptions do NOT permit employment contracts or paid activities.
+  - Issue finding: `Work Visa / Labor Permit Required`.
+  - Advise the traveler to obtain a formal visa via the respective embassy or consulate before travel.
+- **Consular Representation**:
+  - List resident embassy or concurrent diplomatic coverage (e.g., Embassy in Moscow concurrently accredited to Kazakhstan; Embassy in Brasilia for Kazakhstan in Colombia).
 
 ---
 
@@ -92,28 +92,28 @@ Apply intelligence over raw text (ignoring changes in Cancillería's wording):
 Return a clean, structured Markdown report:
 
 ```markdown
-# 🇨🇴 Reporte Oficial Cancillería de Colombia - Políticas y Visados
+# 🇨🇴 Official Colombia Cancillería Report - Immigration & Visa Policies
 
-## Resumen Comparativo de Destinos
-| País / Destino | Propósito | Condición de Visado | Estancia Máx. | Enlace Oficial Cancillería |
+## Comparative Destination Summary
+| Country / Destination | Purpose | Visa Status | Max Stay | Official Cancillería Link |
 | :--- | :--- | :--- | :--- | :--- |
-| **[País]** | [Propósito] | `[Exento / Requiere Visa]` | [Días / ND] | [Ficha Cancillería](url) |
+| **[Country]** | [Purpose] | `[Exempt / Visa Required]` | [Days / Unknown] | [Cancillería Sheet](url) |
 
 ---
 
-## 🌐 [Nombre del País]
-**URL Ficha Oficial:** [URL](URL)  
-**Propósito Evaluado:** `[Propósito]` — **Dictamen:** `[Exento / Requiere Visa]`
+## 🌐 [Country Name]
+**Official Sheet URL:** [URL](URL)  
+**Evaluated Purpose:** `[Purpose]` — **Finding:** `[Exempt / Visa Required]`
 
-### 📌 Evaluación del Agente según Perfil
-- [Evaluación clara y directa]
+### 📌 Agent Assessment by Profile
+- [Clear and direct evaluation]
 
-### 🛂 Asuntos Migratorios Oficiales
-> [Cita textual de Cancillería]
+### 🛂 Official Immigration Details
+> [Verbatim quote or direct summary from Cancillería]
 
-### 🏛️ Representación Diplomática y Consular
-- [Misiones diplomáticas y consulados concurrentes]
+### 🏛️ Diplomatic & Consular Coverage
+- [Resident missions or concurrent embassies/consulates]
 
-### 🔗 Portales Gubernamentales Oficiales Citados
-- [Enlaces oficiales extraídos]
+### 🔗 Official Government Portals Cited
+- [Extracted official links]
 ```
