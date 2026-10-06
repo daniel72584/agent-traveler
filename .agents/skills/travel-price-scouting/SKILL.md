@@ -6,7 +6,7 @@ description: >-
 
 # Travel Price Scouting
 
-Use this skill to scout prices only. Do not book, reserve, hold, message hosts, log in, pay, or submit traveler details. Price sites are dynamic little casinos with calendars; treat every price as a snapshot, not a promise.
+Use this skill to research indicative prices for flights and accommodations. Do not book, reserve, hold, message hosts, log in, pay, or submit traveler details. Treat every price as a helpful planning estimate, not a guaranteed transaction.
 
 ## Supported Sources
 

@@ -6,7 +6,7 @@ description: >-
 
 # Travel Route Mapping
 
-Use this skill to create or inspect map links for route visualization. Google Maps is a useful route sketchpad, not an oracle with a steering wheel.
+Use this skill to create clean, clickable Google Maps links for your itinerary. Google Maps helps travelers visualize travel distances, see the ordered sequence of destinations, and locate train stations, safe neighborhoods, and key attractions along the journey.
 
 Reference guide: `https://gotoapplemaps.com/guides/google-maps-url-formats-explained/`
 
