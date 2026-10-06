@@ -9,7 +9,7 @@ description: >-
 
 This skill acts as the entrypoint and coordinator for traveler policy inquiries regarding the Ministry of Foreign Affairs of Colombia ([Cancillería](https://www.cancilleria.gov.co)).
 
-To keep execution clean and token-efficient, this skill delegates the heavy lifting (web crawling, multi-tier escalation, and semantic parsing) to the dedicated [cancilleria-scanner](file:///Users/macbook/Documents/repos/agent-traveler/.agents/agents/cancilleria-scanner.md) agent.
+To keep execution clean and token-efficient, this skill delegates the heavy lifting (web crawling, multi-tier escalation, and semantic parsing) to the dedicated [cancilleria-scanner](../../agents/cancilleria-scanner.md) agent.
 
 ---
 
@@ -51,7 +51,7 @@ When the user asks about traveling to one or more countries, check if the query 
 
 ## Step 2: Trigger the `cancilleria-scanner` Agent
 
-Once the purpose and country list are confirmed, launch the dedicated [cancilleria-scanner](file:///Users/macbook/Documents/repos/agent-traveler/.agents/agents/cancilleria-scanner.md) agent with the following parameters:
+Once the purpose and country list are confirmed, launch the dedicated [cancilleria-scanner](../../agents/cancilleria-scanner.md) agent with the following parameters:
 
 ```text
 Target Countries: <Lista de países, ej. "Kazajistán, Turquía, Unión Europea">
