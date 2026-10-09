@@ -32,3 +32,6 @@ Whenever the user submits a travel-planning query, route request, trip idea, or 
 
 3. **Output Format**:
    - Synthesize all findings into the unified report structure specified in [.agents/agents/travel-supervisor.md](.agents/agents/travel-supervisor.md#final-output-structure).
+
+4. **Guard rails**
+ - Do not merge PR without asking for a review.
