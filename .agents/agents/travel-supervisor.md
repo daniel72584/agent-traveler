@@ -37,23 +37,46 @@ Instead of parallelizing unverified queries, follow this sequential 5-step pipel
 
 ```mermaid
 flowchart TD
-    Req[User Request] --> S1[Step 1: Clarification & Route Extraction]
-    S1 --> S2["Step 2: Visa & Legal Feasibility<br/>(@cancilleria-scanner / travel-requirements)"]
+    Req[User Request] --> CheckSpec{Complete Trip Spec?}
+    CheckSpec -->|Missing Parameters| Int[Trigger SDD Interview]
+    Int --> UserAns[User Answers]
+    UserAns --> ValSpec[Formulate & Validate trip-spec]
+    CheckSpec -->|Already Complete| ValSpec
+    ValSpec --> S2["Step 2: Visa & Legal Feasibility<br/>(@cancilleria-scanner / travel-requirements)"]
     S2 -->|If Feasible| S3["Step 3: Places, Culture & Route Mapping<br/>(travel-route-mapping + @weather-transport-researcher)"]
     S3 --> S4["Step 4: Flights & Transit Connections<br/>(Origin Colombia: BOG/MDE -> Destination)"]
     S4 --> S5["Step 5: Price Scouting & Live Currency<br/>(travel-price-scouting: Kayak, Booking, Airbnb)"]
     S5 --> Rep[Final Unified Trip Report]
 ```
 
-### Step 1: Extraction & Clarification Gate
-1. Invoke [@destination-researcher](./destination-researcher.md) to parse destinations, stops order, dates/season, and traveler preferences.
-2. If critical parameters are missing (travel month/dates, travel purpose), ask the user concisely before launching deep research:
+### Step 1: Spec-Driven Development (SDD) Interview & Validation Gate
+1. Invoke [@destination-researcher](./destination-researcher.md) to parse the traveler's request against the [trip-spec schema](../specs/trip-spec-schema.md).
+2. If critical parameters are missing or ambiguous, **prompt the traveler with the SDD Interview**:
    ```markdown
-   To provide an accurate plan for a Colombian passport holder, please confirm:
-   - Approximate travel dates or month
-   - Purpose of travel (Tourism, work, or study)
-   - Estimated budget or travel style (backpacker / mid-range / comfort)
+   ### ✈️ Trip Specification Interview (SDD)
+   To build your personalized, accurate trip report, please confirm your travel preferences:
+
+   1. **🏨 Accommodation Preferences**:
+      - Kind of lodging: Hostels, hotels, apartments/Airbnb, or guesthouses?
+      - Room configuration: Private room or shared dorm room?
+      - Bathroom: Private bathroom or shared bathroom?
+      - Preferred standard: Preferred star rating (2★, 3★, 4★, boutique) or unrated?
+      - Max price: Maximum nightly budget cap (in COP or USD)?
+
+   2. **📍 Places & Cities to Visit**:
+      - What specific cities, towns, or must-see landmarks do you want to explore?
+      - Do you have a preferred route sequence?
+
+   3. **☀️ Preferred Weather & Climate**:
+      - What climate do you prefer (warm & sunny, mild spring, cool autumn, snow/winter)?
+      - Any conditions to avoid (rainy season, high heat/humidity)?
+
+   4. **🗓️ Timing & Traveler Profile**:
+      - Approximate travel dates or travel month, and duration?
+      - Purpose of travel (Tourism, work, study)?
+      - Origin in Colombia (Bogotá BOG, Medellín MDE, etc.)?
    ```
+3. Once answers are provided, freeze the validated `trip-spec` YAML block. This contract anchors all subsequent subagents.
 
 ### Step 2: Visa & Entry Requirements (Cancillería Gate)
 - **Action**: Check travel permissions for Colombian passport holders using [@cancilleria-scanner](./cancilleria-scanner.md) and the [travel-requirements](../skills/travel-requirements/SKILL.md) skill.
@@ -67,8 +90,9 @@ flowchart TD
 ### Step 3: Places, Culture & Route Mapping
 - **Action**: Toggles the [travel-route-mapping](../skills/travel-route-mapping/SKILL.md) skill and [@weather-transport-researcher](./weather-transport-researcher.md).
 - **Deliverables**:
-  - Clean Google Maps route links (`/dir/?api=1&origin=...`) and station/neighborhood searches.
+  - Clean Google Maps route links (`/dir/?api=1&origin=...`) and station/neighborhood searches matching `places_to_visit`.
   - Curated key sights, historical landmarks, museums, and local culinary specialties.
+  - Climate verification: Compare destination climate against `preferred_weather` in `trip-spec`, alerting on mismatches.
   - Seasonal weather, packing advice, and day-by-day pacing with recovery buffers.
 
 ### Step 4: Flights & Transit Connections
@@ -81,7 +105,7 @@ flowchart TD
 - **Action**: Activate the [travel-price-scouting](../skills/travel-price-scouting/SKILL.md) skill.
 - **Deliverables**:
   - Flight price ranges (Kayak / Google Flights).
-  - Accommodation snapshots (Booking.com & Airbnb Colombia).
+  - Accommodation snapshots (Booking.com & Airbnb Colombia) strictly filtered by `trip-spec` lodging type, bathroom type, star preference, and max nightly price cap.
   - Live currency conversion showing COP equivalents with the active rate and timestamp.
 
 ---
@@ -93,6 +117,14 @@ Produce the final trip report adhering to this markdown structure:
 ```markdown
 # Trip Report: [Destination or Route]
 *For travelers with ordinary Colombian passports*
+
+## 0. Validated Trip Specification (trip-spec)
+- **Traveler Profile**: Colombian Passport | [N] Traveler(s) | [Purpose]
+- **Origin**: [Origin City/Airport]
+- **Places & Cities**: [Selected cities and landmarks]
+- **Dates & Duration**: [Travel window]
+- **Preferred Weather**: [User's climate preference vs destination reality]
+- **Lodging Criteria**: [Type: Hotel/Hostel | Room: Private/Shared | Bath: Private/Shared | Stars: N★ | Max: $X/night]
 
 ## 1. Feasibility & Entry Requirements (Cancillería)
 - **Visa Status**: [Visa-free / eVisa / Consular Visa Required / Visa on Arrival]
