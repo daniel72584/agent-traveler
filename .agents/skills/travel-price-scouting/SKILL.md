@@ -25,14 +25,17 @@ Normalize user-provided URLs before using them:
 
 ## Required Inputs
 
-For accommodation scouting, collect or preserve:
+For accommodation scouting, collect or preserve (from the validated `trip-spec`):
 
 - Destination city or neighborhood.
 - Check-in and check-out dates, or travel month/season if flexible.
 - Number of guests and rooms/beds.
-- Accommodation type: hostel, hotel, house, flat/apartment, private room, shared room, or flexible.
-- Required amenities: internet/Wi-Fi, private bathroom, parking, kitchen, washer, air conditioning, workspace, breakfast, elevator, accessibility, pet-friendly, or other.
-- Budget range and currency when available.
+- Accommodation kind: hostel, hotel, house, flat/apartment, private room, shared dorm, or flexible.
+- Room configuration: private room vs. shared dormitory.
+- Bathroom: private bathroom vs. shared bathroom.
+- Preferred standard/stars: unrated, 2★, 3★, 4★, 5★, or boutique.
+- Nightly budget limit: maximum price cap and currency (COP, USD, EUR).
+- Required amenities: internet/Wi-Fi, air conditioning, workspace, breakfast, elevator, etc.
 - Preferred area, safety/location priorities, cancellation flexibility, rating/review minimum, and maximum distance from center or transit when available.
 
 For flight scouting, collect or preserve:

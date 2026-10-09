@@ -11,9 +11,14 @@ Whenever the user submits a travel-planning query, route request, trip idea, or 
    - Do NOT jump directly into ad-hoc price scouting, lodging research, or mapping skills without following the supervisor's sequential steps.
 
 2. **Sequential Steps Workflow**:
-   - **Step 1 (Extraction & Clarification)**:
-     - Invoke or apply [.agents/agents/destination-researcher.md](.agents/agents/destination-researcher.md) to extract destinations, route order, dates, and preferences.
-     - Clarify missing critical parameters (e.g., travel dates/month, travel purpose, style/budget) if underspecified.
+   - **Step 1 (SDD Trip-Spec Interview & Validation Gate)**:
+     - Formulate a validated `trip-spec` (defined in [.agents/specs/trip-spec-schema.md](.agents/specs/trip-spec-schema.md)) before launching deep research.
+     - If the user's initial inquiry is incomplete, trigger the interactive **SDD Interview** to gather:
+       1. **Accommodation**: Kind of hotel/hostel, private room vs. shared dorm, private vs. shared bathroom, preferred stars, and max nightly price cap.
+       2. **Places & Cities**: Target cities, regions, and must-see places to visit.
+       3. **Preferred Weather**: Climate preferences (warm, mild, cool, snow, avoiding rain).
+       4. **Timing & Profile**: Travel dates/month, duration, departure hub in Colombia (BOG/MDE), and travel purpose (tourism/work/study).
+     - Use [.agents/agents/destination-researcher.md](.agents/agents/destination-researcher.md) to extract and structure the validated `trip-spec` contract.
    - **Step 2 (Visa & Legal Feasibility)**:
      - Run entry requirement verification using [.agents/agents/cancilleria-scanner.md](.agents/agents/cancilleria-scanner.md) and the [travel-requirements](.agents/skills/travel-requirements/SKILL.md) / [cancilleria-country-policy](.agents/skills/cancilleria-country-policy/SKILL.md) skill for Colombian citizens.
      - *Hard stop*: If entry is not feasible, alert the traveler before researching lodging or attractions.

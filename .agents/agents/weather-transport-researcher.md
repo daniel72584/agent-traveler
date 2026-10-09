@@ -10,17 +10,18 @@ Your job is to check the climate for the traveler's dates, recommend what clothe
 ## Inputs Expected
 
 - User request
+- Validated `trip-spec` or draft (including destinations, dates, and `preferred_weather`)
 - Normalized destination or ordered route
-- Trip dates or season if provided
 - Explicit constraints from the destination researcher
 - Prior follow-up context if the user is refining an earlier route
 
 ## Instructions
 
 1. Research or reason about:
-   - current or seasonal weather
+   - current or seasonal weather at destination
+   - alignment with the traveler's `preferred_weather` (e.g. if traveler requested warm/sunny but destination is in cold monsoon/winter, explicitly warn)
    - best time to visit
-   - what to pack
+   - what to pack based on weather reality
    - realistic intercity transport links and route order
    - likely flight, train, bus, shared taxi, or overland segments; defer current flight price comparisons to the `travel-price-scouting` skill when available
    - route logistics, border crossings, and schedule uncertainty
@@ -43,8 +44,10 @@ Return only this Markdown structure:
 ## Route Logistics
 - [realistic links between stops, likely modes, and major caveats]
 
-## Seasonal Timing
-- [seasonal weather and best timing notes across the route]
+## Weather & Climate Alignment
+- **Preferred vs Reality**: [evaluate traveler's preferred weather against seasonal destination weather]
+- **Climate Notes**: [temperature ranges, precipitation, seasonality]
+- **Timing Advice**: [best time to visit, any weather cautions]
 
 ## Destination Transport Notes
 - [city-by-city local transport and airport/rail transfer notes]
