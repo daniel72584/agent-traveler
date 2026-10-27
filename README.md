@@ -1,34 +1,82 @@
 # Agent Traveler
 
-* Designed to work with you LLM, to help travelers with their trips,
-So the idea is to give an accurate or idea of a trip, and the agentl will help you
-to clarify ideas, show you options.
+An AI travel planner built for travelers holding ordinary Colombian passports.
 
-Is not going to schedule or pay the trip, the idea is just to give an accurate report
-of the trip, and the user can use it to plan their trip.
+Instead of jumping straight into speculative hotel searches, Agent Traveler follows a structured, step-by-step workflow: it interviews you to clarify your travel preferences, checks Colombian visa and border requirements, maps realistic transit routes, and calculates indicative budgets in Colombian Pesos (COP).
 
+It does not book flights or process payments. Its goal is to deliver an accurate, actionable travel dossier you can use to plan your trip safely.
 
-## How It Works: Your Travel Team
+---
 
-The planner uses specialized helpers to research each part of your journey:
+## Architecture: How It Works
 
-* **The Trip Coordinator (`.agents/agents/travel-supervisor.md`)**: Think of this as your main travel guide. It listens to what kind of trip you want, conducts an interactive **Spec-Driven Development (SDD)** interview to formulate a formal `trip-spec` (lodging type/room/bathroom/stars/price, cities/places, preferred weather, dates), organizes the planning steps, and combines all findings into one clear, easy-to-read travel report.
+Agent Traveler uses a primary coordinator that delegates tasks to focused specialist agents and tools:
 
-* **Visa & Border Checker (`.agents/agents/cancilleria-scanner.md` & `.agents/skills/cancilleria-country-policy`)**: Border rules can be tricky. This agent checks official entry rules, visas, and stay limits specifically for travelers with Colombian passports so you never have surprises at immigration.
+- **Trip Supervisor ([`.agents/agents/travel-supervisor.md`](.agents/agents/travel-supervisor.md))**: The orchestrator. When you share a trip idea, it checks whether your requirements are complete. If not, it launches an interactive **Spec-Driven Development (SDD)** interview to nail down lodging preferences, target cities, preferred climate, dates, and budget. Once defined, it freezes your requirements into a validated `trip-spec` YAML contract.
+- **Visa & Entry Checker ([`.agents/agents/cancilleria-scanner.md`](.agents/agents/cancilleria-scanner.md))**: Verifies travel permissions for Colombian passport holders using official Cancillería guidelines, embassy policies, and layover rules. If a destination is legally unfeasible, it alerts you before planning routes.
+- **Route & Sights Planner ([`.agents/agents/destination-researcher.md`](.agents/agents/destination-researcher.md))**: Orders stops logically, highlights local culture and food, and generates clean, clickable Google Maps links.
+- **Weather & Local Transport ([`.agents/agents/weather-transport-researcher.md`](.agents/agents/weather-transport-researcher.md))**: Compares destination weather against your preferences, recommends seasonal packing, and explains metro, bus, and reliable taxi options.
+- **Price & Live Currency Scout ([`.agents/skills/travel-price-scouting`](.agents/skills/travel-price-scouting/SKILL.md))**: Pulls indicative price ranges for flights and lodging (Booking, Airbnb, Kayak) matching your exact room and price filters, with live USD/EUR to COP exchange rates.
 
-* **Route & Destination Explorer (`.agents/agents/destination-researcher.md` & `.agents/skills/travel-route-mapping`)**: The map builder. It organizes your stops in a logical order, suggests authentic cultural sights, and creates clickable Google Maps routes connecting your journey.
+---
 
-* **Weather & Transport Guide (`.agents/agents/weather-transport-researcher.md`)**: Traveling to unfamiliar climates can be challenging. This agent checks seasonal weather, evaluates alignment with your preferred climate, tells you what to pack, and explains how to get around each city (trains, buses, metro, and reliable taxi apps).
+## Spec-Driven Development (SDD) Gate
 
-* **Price & Budget Scout (`.agents/skills/travel-price-scouting`)**: Keeps your trip on budget. It looks up indicative prices for flights and accommodations (hostels, guesthouses, or hotels filtered by your exact room, bathroom, star, and price preferences) on Booking, Airbnb, and Kayak, always converting costs to Colombian Pesos (COP) using live exchange rates.
+Agent Traveler prevents wasted tokens and hallucinated itineraries by enforcing an explicit validation gate:
 
-## Spec-Driven Development (SDD) Workflow
-Before spending tokens or fetching external sites, the system enforces an SDD Gate:
-1. **Interactive Interview**: Asks for accommodation style (hotel/hostel, private/shared room and bath, preferred stars, max nightly budget), target cities/landmarks, preferred weather, and trip dates.
-2. **Validated `trip-spec`**: Freezes the formal specification contract defined in [`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md).
-3. **Execution**: Downstream specialist agents execute their tasks anchored to the validated spec.
+1. **Interview**: If your prompt lacks key details (e.g., "I want to visit the US for 2 weeks"), the agent pauses at Step 1 and asks for missing parameters (lodging style, bathroom preference, star rating, nightly price cap, cities, weather, origin airport).
+2. **Contract Freeze**: Answers are saved as a structured `trip-spec` defined in [`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md).
+3. **Execution**: Downstream research (visas, routes, flights, pricing) only runs once the spec is valid.
 
-## Roadmap & TODOs
-* [x] **Spec-Driven Development (SDD)**: Implemented interactive interview protocol and validated `trip-spec` schema contract ([`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md)).
-* [ ] **Agent Evals & Specs Tests**: Build automated spec/eval test suites using the Gemini SDK and Antigravity to validate the usage, (TBD How to create the test?)
-* [ ] **ADK Workflow Migration**: Evaluate the same approach using Google ADK (Agent Development Kit) for deterministic state machines, typed schemas, and session checkpointing. 
+---
+
+## Setup & Running the Evaluation Suite
+
+We use the Google Antigravity Python SDK (`google-antigravity`) to run automated evaluation test cases against the supervisor's interview gate and guardrails.
+
+### 1. Create a Virtual Environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Configure Credentials
+
+Create a `.env` file in the project root:
+
+```bash
+GEMINI_KEY="your_api_key_here"
+GEMINI_MODEL="gemini-3.5-flash-lite"
+```
+
+The runner supports both `GEMINI_KEY` and `GEMINI_API_KEY`.
+
+### 3. Run the Evals
+
+Run the test cases in `evals/test_cases.json`:
+
+```bash
+# Run all test cases live using the model in .env
+python -m evals.run_evals
+
+# Run in offline mock mode (no API calls, validates rubric engine)
+python -m evals.run_evals --mock
+
+# Run a specific test case without updating test_cases.json
+python -m evals.run_evals --test-id tc-001-usa-2-weeks-incomplete-interview --no-update
+
+# Override model or key on the command line
+python -m evals.run_evals --model gemini-3.8-flash --api-key YOUR_KEY
+```
+
+Every run logs execution history in [`evals/test_cases.json`](evals/test_cases.json) and writes a markdown summary to `evals/reports/report_v<version>.md` (for example, [`evals/reports/report_v1.0.0.md`](evals/reports/report_v1.0.0.md)).
+
+---
+
+## Roadmap
+
+- [x] **Spec-Driven Development (SDD)**: Interactive interview protocol and validated `trip-spec` schema contract ([`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md)).
+- [x] **Antigravity SDK Test Harness**: Automated evaluation runner that verifies the Step 1 interview gate and blocks premature route/pricing actions ([`evals/run_evals.py`](evals/run_evals.py)).
+- [ ] **Google ADK Migration**: Explore Google Agent Development Kit (ADK) for deterministic state machines and session checkpointing. 
