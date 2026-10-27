@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Traveler Test Cases & Execution History",
+  "version": "1.0.0",
+  "test_cases": [
+    {
+      "id": "tc-001-usa-2-weeks-incomplete-interview",
+      "name": "USA 2-Week Trip - Incomplete Spec Triggers SDD Interview",
+      "description": "User provides an underspecified prompt ('i wanna visit EEUU for 2 weeks'). Verifies that the agent strictly halts at Step 1 and launches the interactive 4-part SDD Interview before attempting downstream research.",
+      "category": "sdd_interview_gate",
+      "tags": [
+        "sdd_interview",
+        "incomplete_spec",
+        "usa",
+        "gate_validation"
+      ],
+      "input": {
+        "user_query": "i wanna visit EEUU for 2 weeks",
+        "conversation_turn": 1
+      },
+      "expected_behavior": {
+        "sdd_interview_triggered": true,
+        "proceeded_to_downstream_steps": false,
+        "interview_questions_required": [
+          "accommodation",
+          "places_and_cities",
+          "preferred_weather",
+          "timing_and_traveler_profile"
+        ],
+        "missing_fields_identified": [
+          "origin",
+          "places_to_visit",
+          "timing.dates_or_month",
+          "preferred_weather",
+          "accommodation.kind",
+          "accommodation.room_type",
+          "accommodation.bathroom",
+          "accommodation.max_price_per_night"
+        ],
+        "forbidden_actions_at_this_stage": [
+          "recommending_specific_hotels",
+          "scouting_booking_or_airbnb",
+          "generating_google_maps_routes",
+          "calculating_final_budget"
+        ]
+      },
+      "eval_rubric": {
+        "must_contain_keywords": [
+          "Interview",
+          "Accommodation",
+          "Cities",
+          "Weather",
+          "Timing"
+        ],
+        "must_not_contain_patterns": [
+          "booking.com",
+          "airbnb.com",
+          "google.com/maps/dir"
+        ]
+      },
+      "executions": [
+        {
+          "execution_id": "exec-v1.0.0-20261027-020037-tc-001-usa-2-weeks-incomplete-interview",
+          "version": "1.0.0",
+          "timestamp": "2026-10-27T02:00:37.218250+00:00",
+          "status": "PASSED",
+          "duration_seconds": 5.43,
+          "mode": "antigravity_sdk (gemini-3.5-flash-lite)",
+          "eval_result": {
+            "passed": true,
+            "interview_triggered": true,
+            "proceeded_to_downstream": false,
+            "matched_keywords": [
+              "Interview",
+              "Accommodation",
+              "Cities",
+              "Weather",
+              "Timing"
+            ],
+            "missing_keywords": [],
+            "forbidden_patterns_found": [],
+            "forbidden_tool_calls": []
+          },
+          "full_response": "### ✈️ Trip Specification Interview (SDD)\n\n¡Hola! Welcome to your travel planning assistant. To build your personalized, accurate trip report for visiting the United States (EEUU) for 2 weeks on an ordinary Colombian passport, we need to complete our **Spec-Driven Development (SDD) Interview**.\n\nPlease review and answer the following preferences so we can tailor your itinerary, visa checks, routes, and budget:\n\n1. **🏨 Accommodation Preferences**:\n   - **Kind of lodging**: Hostels, hotels, apartments/Airbnb, or guesthouses?\n   - **Room configuration**: Private room or shared dorm room?\n   - **Bathroom**: Private bathroom or shared bathroom?\n   - **Preferred standard**: Preferred star rating (2★, 3★, 4★, boutique) or unrated?\n   - **Max price**: Maximum nightly budget cap (in USD or COP)?\n\n2. **📍 Places & Cities to Visit**:\n   - What specific U.S. cities, regions, or must-see landmarks do you want to explore during your 2 weeks? *(e.g., East Coast like New York & Washington D.C.; West Coast like San Francisco, Los Angeles & Las Vegas; or Florida like Miami & Orlando)*\n   - Do you have a preferred route sequence?\n\n3. **☀️ Preferred Weather & Climate**:\n   - What climate do you prefer for your trip? *(e.g., warm & sunny, mild spring, cool autumn, or winter/snow)*\n   - Any conditions or seasons to avoid?\n\n4. **🗓️ Timing & Traveler Profile**:\n   - What are your approximate travel dates or travel month?\n   - Purpose of travel: Tourism, business/work, or study?\n   - Origin airport in Colombia: Bogotá (`BOG`), Medellín (`MDE`), or another city?\n\nOnce you reply with your preferences, we will freeze your validated `trip-spec` and proceed immediately with visa feasibility (Cancillería / US Visa requirements), route mapping, flight corridors from Colombia, and price scouting!"
+        }
+      ]
+    }
+  ]
+}
