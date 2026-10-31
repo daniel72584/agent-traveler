@@ -30,6 +30,26 @@ Agent Traveler prevents wasted tokens and hallucinated itineraries by enforcing 
 
 ---
 
+## Codebase Architecture & Graph Explorer
+
+Agent Traveler uses [Grafeando](.agents/skills/grafeando/SKILL.md) powered by LadybugDB to map AST entities, dependency relationships, call graphs, and blast radius across agents, skills, and schemas.
+
+![Grafeando Explorer - AST Graph View](assets/test1.png)
+
+![Grafeando Explorer - Node Details](assets/test2.png)
+
+To explore or update the graph:
+
+```bash
+# Re-index AST entities into LadybugDB
+grafeando index .
+
+# Generate interactive standalone HTML graph explorer
+grafeando html
+```
+
+---
+
 ## Setup & Running the Evaluation Suite
 
 We use the Google Antigravity Python SDK (`google-antigravity`) to run automated evaluation test cases against the supervisor's interview gate and guardrails.

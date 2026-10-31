@@ -225,4 +225,9 @@ grafeando-graph.html
 # Local IDE and MCP configs
 .gemini/
 .agents/mcp_config.json
+.claude/
+.cursor/
+.windsurf/
+.continue/
+.codex/
 .env
