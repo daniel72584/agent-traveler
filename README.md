@@ -34,7 +34,9 @@ Agent Traveler prevents wasted tokens and hallucinated itineraries by enforcing 
 
 Agent Traveler uses [Grafeando](.agents/skills/grafeando/SKILL.md) powered by LadybugDB to map AST entities, dependency relationships, call graphs, and blast radius across agents, skills, and schemas.
 
-![Grafeando Explorer - Agent Traveler AST Graph](assets/grafeando-graph-explorer.jpg)
+![Grafeando Explorer - AST Graph View](assets/test1.png)
+
+![Grafeando Explorer - Node Details](assets/test2.png)
 
 To explore or update the graph:
 
