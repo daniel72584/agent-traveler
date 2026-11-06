@@ -1,0 +1,79 @@
+{
+  "compliant_case": {
+    "trip_spec": {
+      "version": "1.0",
+      "status": "validated",
+      "traveler": {
+        "passport": "Colombian Ordinary",
+        "count": 1,
+        "purpose": "Tourism"
+      },
+      "origin": "Bogotá (BOG)",
+      "destinations": {
+        "places_to_visit": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ],
+        "route_order": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ]
+      },
+      "timing": {
+        "dates": "2026-11-05 to 2026-11-20",
+        "duration_days": 15
+      },
+      "preferred_weather": "Mild autumn, crisp, dry (fall foliage)",
+      "accommodation": {
+        "kind": "hotel",
+        "room_type": "private_room",
+        "bathroom": "private_bathroom",
+        "stars": "3 stars",
+        "max_price_per_night": "80 USD"
+      },
+      "activity_style": "moderate cultural exploration"
+    },
+    "report_markdown": "# Trip Report: Tokyo -> Kyoto -> Osaka\n*For travelers with ordinary Colombian passports*\n\n## 0. Validated Trip Specification (trip-spec)\n- **Traveler Profile**: Colombian Ordinary | 1 Traveler(s) | Tourism\n- **Origin**: Bogotá (BOG)\n- **Places & Cities**: Tokyo, Kyoto, Osaka\n- **Dates & Duration**: 2026-11-05 to 2026-11-20 (15 days)\n- **Preferred Weather**: Mild autumn, crisp, dry (fall foliage)\n- **Lodging Criteria**: Type: hotel | Room: private_room | Bath: private_bathroom | Stars: 3 stars | Max: 80 USD\n\n## 1. Feasibility & Entry Requirements (Cancillería)\n- **Visa Status**: Consular Visa Required for ordinary Colombian passports\n- **Permitted Stay**: Up to 90 days\n- **Passport Validity**: Minimum 6 months validity required from departure date.\n- **Health & Vaccines**: Travel medical insurance recommended.\n- **Layovers & Transit**: Connections via US hubs require a US transit/tourist visa; connections via Madrid/Paris stay airside.\n- **Official Source**: https://www.cancilleria.gov.co/politica-exterior/asuntos-bilaterales/asia/japon\n\n## 2. Route & Interactive Map\n- **Ordered Route**: Tokyo -> Kyoto -> Osaka\n- **Google Maps Link**: https://www.google.com/maps/dir/?api=1&origin=Tokyo&destination=Osaka&waypoints=Kyoto&travelmode=driving\n- **Useful Map Searches**:\n  - Tokyo station: https://www.google.com/maps/search/?api=1&query=Tokyo+station\n\n## 3. Flights & Connections from Colombia\n- **Recommended Flight Corridor**: 1-stop from Bogotá (BOG) via Madrid or Paris to Tokyo.\n- **Critical Layovers**: Avoid US layovers unless holding a valid US visa.\n\n## 4. Budget & Price Estimates\n- **Live Exchange Rate**: 1 USD = 4,180.00 COP (Source: ExchangeRate-API, fetched 2026-11-05)\n- **Indicative Flights**: 1,350–1,950 USD round-trip\n- **Accommodation (Booking / Airbnb)**: Filtered by SDD (`hotel`, `private_room`, `private_bathroom`, `3 stars`, cap <= 80 USD): Indicative range **52–80 USD / night** across Tokyo, Kyoto, Osaka.\n\n## 5. Sights, Culture & Local Food\n- **Tokyo**: Senso-ji, Meiji Shrine, Shibuya.\n- **Kyoto**: Fushimi Inari, Kinkaku-ji.\n- **Osaka**: Dotonbori, Osaka Castle.\n\n## 6. Logistics, Weather & Practical Tips\n- **Weather & Packing**: Preferred weather: Mild autumn, crisp, dry (fall foliage). Pack light layers.\n- **Local Transport & Pace**: Shinkansen between Tokyo, Kyoto, and Osaka; 5 days per stop.\n\n## Assumptions & Caveats\n- Verify live fares before booking.\n"
+  },
+  "over_budget_and_missing_city_case": {
+    "trip_spec": {
+      "version": "1.0",
+      "status": "validated",
+      "traveler": {
+        "passport": "Colombian Ordinary",
+        "count": 1,
+        "purpose": "Tourism"
+      },
+      "origin": "Bogotá (BOG)",
+      "destinations": {
+        "places_to_visit": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ],
+        "route_order": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ]
+      },
+      "timing": {
+        "dates": "2026-11-05 to 2026-11-20",
+        "duration_days": 15
+      },
+      "preferred_weather": "Mild autumn, crisp, dry (fall foliage)",
+      "accommodation": {
+        "kind": "hotel",
+        "room_type": "private_room",
+        "bathroom": "private_bathroom",
+        "stars": "3 stars",
+        "max_price_per_night": "80 USD"
+      },
+      "activity_style": "moderate cultural exploration"
+    },
+    "report_markdown": "# Trip Report: Tokyo -> Kyoto\n*For travelers with ordinary Colombian passports*\n\n## 0. Validated Trip Specification (trip-spec)\n- **Origin**: Bogotá (BOG)\n\n## 1. Feasibility & Entry Requirements (Cancillería)\n- **Visa Status**: Consular Visa Required\n- **Passport Validity**: Minimum 6 months validity required.\n- **Official Source**: https://www.cancilleria.gov.co/politica-exterior/asuntos-bilaterales/asia/japon\n\n## 2. Route & Interactive Map\n- **Ordered Route**: Tokyo -> Kyoto\n- **Google Maps Link**: https://www.google.com/maps/dir/?api=1&origin=Tokyo&destination=Kyoto&travelmode=driving\n\n## 3. Flights & Connections from Colombia\n- **Recommended Flight Corridor**: BOG to Tokyo\n\n## 4. Budget & Price Estimates\n- **Live Exchange Rate**: 1 USD = 4,180.00 COP\n- **Accommodation (Booking / Airbnb)**: Luxury `hotel` (`private_room`, `private_bathroom`, `4 stars`) at **110–145 USD / night**.\n\n## 5. Sights, Culture & Local Food\n- **Tokyo & Kyoto**: Temples.\n\n## 6. Logistics, Weather & Practical Tips\n- **Weather & Packing**: Mild autumn, crisp, dry (fall foliage).\n\n## Assumptions & Caveats\n- Verify before booking.\n"
+  }
+}
+

@@ -1,0 +1,43 @@
+{
+  "scenarios": [
+    {
+      "id": "builder-01-incomplete-prompt-triggers-interview",
+      "description": "Single underspecified prompt ('i wanna visit EEUU for 2 weeks') halts at SDD interview on Attempt 1/10.",
+      "turns": [
+        "i wanna visit EEUU for 2 weeks"
+      ],
+      "expected_status": "interviewing",
+      "expected_attempts": 1
+    },
+    {
+      "id": "builder-02-multi-turn-reaches-validated-spec",
+      "description": "Progressive 3-turn interview reaches a complete, validated trip-spec before 10 attempts.",
+      "turns": [
+        "i wanna visit EEUU for 2 weeks",
+        "I want to visit New York and Miami for tourism, flying from Bogotá in November 2026.",
+        "I prefer warm & sunny weather, staying in a 3 stars hotel with private room and private bathroom, max 80 USD per night."
+      ],
+      "expected_status": "validated",
+      "expected_attempts": 3
+    },
+    {
+      "id": "builder-03-exhausts-10-max-attempts",
+      "description": "User provides incomplete answers across 10 attempts; Builder halts at attempt 10 with failed_max_attempts.",
+      "turns": [
+        "I want to travel somewhere",
+        "Maybe for 2 weeks",
+        "From Bogotá",
+        "For tourism",
+        "Still thinking about cities",
+        "Maybe Tokyo and Kyoto",
+        "In November 2026",
+        "I like mild autumn weather",
+        "I prefer a hotel with a private room",
+        "Still not sure about bathroom, stars, or max price"
+      ],
+      "expected_status": "failed_max_attempts",
+      "expected_attempts": 10
+    }
+  ]
+}
+
