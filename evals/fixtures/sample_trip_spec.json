@@ -1,0 +1,68 @@
+{
+  "valid_japan_spec": {
+    "trip_spec": {
+      "version": "1.0",
+      "status": "validated",
+      "traveler": {
+        "passport": "Colombian Ordinary",
+        "count": 1,
+        "purpose": "Tourism"
+      },
+      "origin": "Bogotá (BOG)",
+      "destinations": {
+        "places_to_visit": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ],
+        "route_order": [
+          "Tokyo",
+          "Kyoto",
+          "Osaka"
+        ]
+      },
+      "timing": {
+        "dates": "2026-11-05 to 2026-11-20",
+        "duration_days": 15
+      },
+      "preferred_weather": "Mild autumn, crisp, dry (fall foliage)",
+      "accommodation": {
+        "kind": "hotel",
+        "room_type": "private_room",
+        "bathroom": "private_bathroom",
+        "stars": "3 stars",
+        "max_price_per_night": "80 USD"
+      },
+      "activity_style": "moderate cultural exploration"
+    }
+  },
+  "incomplete_spec": {
+    "trip_spec": {
+      "version": "1.0",
+      "status": "interviewing",
+      "traveler": {
+        "passport": "Colombian Ordinary",
+        "count": 1,
+        "purpose": "Tourism"
+      },
+      "origin": "Bogotá (BOG)",
+      "destinations": {
+        "places_to_visit": [],
+        "route_order": []
+      },
+      "timing": {
+        "dates": null,
+        "duration_days": 14
+      },
+      "preferred_weather": null,
+      "accommodation": {
+        "kind": null,
+        "room_type": null,
+        "bathroom": null,
+        "stars": null,
+        "max_price_per_night": null
+      }
+    }
+  }
+}
+
