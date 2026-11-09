@@ -72,11 +72,18 @@ def deterministic_executioner_fallback_callback(
     callback_context: CallbackContext,
     llm_request: LlmRequest,
 ) -> Optional[LlmResponse]:
-    """ADK `before_model_callback` running `TravelExecutionPipeline` deterministically offline."""
-    offline_mode = os.environ.get("EXECUTIONER_OFFLINE_MODE", "").lower() in ("1", "true", "yes")
+    """ADK `before_model_callback` running `TravelExecutionPipeline` (live tools or offline).
+
+    Runs the 4 executioner tools (`check_cancilleria_visa_policy`,
+    `build_route_and_climate_plan`, `analyze_flights_from_colombia`,
+    `scout_prices_and_live_currency`) directly via `TravelExecutionPipeline.execute`
+    so the A2A server responds in ~1-2s instead of timing out across 5 sequential LLM turns.
+    Set `EXECUTIONER_FORCE_LLM=1` to bypass the pipeline and let the LLM invoke tools manually.
+    """
+    force_llm = os.environ.get("EXECUTIONER_FORCE_LLM", "").lower() in ("1", "true", "yes")
     has_api_key = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_KEY"))
 
-    if not offline_mode and has_api_key:
+    if force_llm and has_api_key:
         return None
 
     user_text = _extract_latest_user_text(llm_request)

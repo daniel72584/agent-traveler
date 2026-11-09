@@ -119,6 +119,47 @@ _REGIONAL_PROFILES: tuple[RegionTravelProfile, ...] = (
         ),
         flight_usd_range=(750, 1250),
     ),
+    RegionTravelProfile(
+        name="central_asia",
+        keywords=(
+            "kyrgyzstan",
+            "kirguistán",
+            "kirguistan",
+            "bishkek",
+            "kazakhstan",
+            "kazajistán",
+            "kazajistan",
+            "almaty",
+            "astana",
+            "uzbekistan",
+            "uzbekistán",
+            "tashkent",
+            "samarkand",
+        ),
+        visa_policy={
+            "is_entry_feasible": True,
+            "visa_status": (
+                "Electronic Visa (e-Visa) or Consular Verification Required for ordinary Colombian passports "
+                "traveling to the Kyrgyz Republic (verify via e-Visa portal evisa.e-gov.kg and concurrent embassy)"
+            ),
+            "permitted_stay": "Up to 30–60 days per e-Visa / bilateral tourist rules",
+            "passport_validity": "Minimum 6 months validity required beyond intended departure date.",
+            "health_and_vaccines": "Yellow Fever vaccination certificate recommended if transiting endemic hubs; comprehensive high-altitude/medical insurance advised.",
+            "layovers_and_transit": (
+                "Best routed from Colombia via Istanbul (IST - Turkish Airlines) or Schengen hubs (MAD/FRA) "
+                "to avoid US/UK transit visa requirements."
+            ),
+            "official_source": "https://www.cancilleria.gov.co/politica-exterior/asuntos-bilaterales/europa/republica-kirguisa",
+        },
+        corridor_template=lambda origin, first, last: (
+            f"1-stop or 2-stop routing from {origin} to {first} (returning from {last}) "
+            f"via Istanbul (Turkish Airlines BOG-IST-FRU/ALA) or via Madrid/Frankfurt + Istanbul."
+        ),
+        layover_guidance=(
+            "Route via Istanbul (IST) or Schengen (MAD/CDG/FRA) airside transit to avoid US B1/B2/C1 or UK DATV transit visas."
+        ),
+        flight_usd_range=(1250, 1850),
+    ),
 )
 
 _DEFAULT_PROFILE = RegionTravelProfile(

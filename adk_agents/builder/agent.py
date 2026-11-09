@@ -26,6 +26,7 @@ if os.environ.get("GEMINI_KEY") and not os.environ.get("GEMINI_API_KEY"):
 from adk_agents.builder.callbacks import (
     deterministic_builder_fallback_callback,
     enforce_sdd_attempt_gate,
+    ensure_validated_yaml_in_response_callback,
 )
 from adk_agents.builder.prompts import BUILDER_SYSTEM_INSTRUCTION
 from adk_agents.builder.tools import update_and_validate_trip_spec
@@ -46,6 +47,7 @@ def create_builder_agent(model: str = DEFAULT_MODEL) -> Agent:
         tools=[update_and_validate_trip_spec],
         before_agent_callback=enforce_sdd_attempt_gate,
         before_model_callback=deterministic_builder_fallback_callback,
+        after_model_callback=ensure_validated_yaml_in_response_callback,
     )
 
 

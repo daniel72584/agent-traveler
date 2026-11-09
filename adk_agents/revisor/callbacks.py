@@ -27,11 +27,14 @@ def deterministic_revisor_fallback_callback(
     callback_context: CallbackContext,
     llm_request: LlmRequest,
 ) -> Optional[LlmResponse]:
-    """ADK `before_model_callback` running `RevisorAuditEngine` deterministically offline."""
-    offline_mode = os.environ.get("REVISOR_OFFLINE_MODE", "").lower() in ("1", "true", "yes")
+    """ADK `before_model_callback` running `RevisorAuditEngine` across all 6 SDD compliance gates.
+
+    Set `REVISOR_FORCE_LLM=1` to let the LLM invoke `audit_report_against_sdd` manually.
+    """
+    force_llm = os.environ.get("REVISOR_FORCE_LLM", "").lower() in ("1", "true", "yes")
     has_api_key = bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GEMINI_KEY"))
 
-    if not offline_mode and has_api_key:
+    if force_llm and has_api_key:
         return None
 
     user_text = _extract_latest_user_text(llm_request)
