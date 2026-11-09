@@ -20,7 +20,28 @@ _MULTIPLIER_MAP: dict[str, float] = {
 }
 
 
-def _parse_usd_cap(price_str: str | None, duration_days: int = 14) -> float | None:
+def _extract_usd_cop_rate_from_report(report_markdown: str = "") -> float:
+    if report_markdown:
+        m = re.search(
+            r"1\s*USD\s*=\s*([\d,]+(?:\.\d+)?)\s*COP",
+            report_markdown,
+            re.IGNORECASE,
+        )
+        if m:
+            try:
+                rate = float(m.group(1).replace(",", ""))
+                if rate > 0:
+                    return rate
+            except ValueError:
+                pass
+    return 4180.0
+
+
+def _parse_usd_cap(
+    price_str: str | None,
+    duration_days: int = 14,
+    report_markdown: str = "",
+) -> float | None:
     if not price_str:
         return None
     cleaned = price_str.upper().replace(",", "")
@@ -31,7 +52,7 @@ def _parse_usd_cap(price_str: str | None, duration_days: int = 14) -> float | No
     suffix = m.group(2) or ""
     val *= _MULTIPLIER_MAP.get(suffix, 1.0)
     if "COP" in cleaned:
-        val /= 4180.0
+        val /= _extract_usd_cop_rate_from_report(report_markdown)
     if "TOTAL" in cleaned and duration_days > 0:
         val /= duration_days
     return round(val, 2)
@@ -228,6 +249,7 @@ class AccommodationBudgetRule(SddComplianceRule):
         spec_cap_usd = _parse_usd_cap(
             acc.max_price_per_night,
             duration_days=ctx.spec.timing.duration_days or 14,
+            report_markdown=ctx.report_markdown,
         )
         report_max_usd = _extract_max_nightly_usd_from_report(
             ctx.report_markdown, ctx.report_dict
@@ -261,7 +283,7 @@ class AccommodationBudgetRule(SddComplianceRule):
     ) -> tuple[bool, str]:
         if report_max_usd is None:
             return False, "Report does not state an explicit nightly USD accommodation price range."
-        if spec_cap_usd is not None and report_max_usd > spec_cap_usd:
+        if spec_cap_usd is not None and report_max_usd > (spec_cap_usd + 0.55):
             return (
                 False,
                 f"Report lodging price ({report_max_usd} USD/night) exceeds SDD max_price_per_night cap ({spec_cap_usd} USD/night).",

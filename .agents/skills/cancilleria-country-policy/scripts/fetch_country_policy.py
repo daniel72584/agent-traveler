@@ -19,47 +19,199 @@ import urllib.request
 import urllib.parse
 from html.parser import HTMLParser
 
+try:
+    from curl_cffi import requests as cffi_requests
+    _HAS_CURL_CFFI = True
+except ImportError:
+    cffi_requests = None
+    _HAS_CURL_CFFI = False
+
 REGIONS = ["europa", "america", "asia", "africa"]
 
+BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "es-CO,es-ES;q=0.9,es;q=0.8,en;q=0.7",
+    "Sec-CH-UA": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+    "Sec-CH-UA-Mobile": "?0",
+    "Sec-CH-UA-Platform": '"macOS"',
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Upgrade-Insecure-Requests": "1",
+}
+
+_HTML_CACHE: dict[str, str] = {}
+
 COMMON_ALIASES = {
+    # Americas
     "estados unidos": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
     "usa": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
     "eeuu": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
     "united states": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "new york": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "miami": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "orlando": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "los angeles": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "san francisco": ("Estados Unidos de América", "estados-unidos-de-america", "america"),
+    "canada": ("Canadá", "canada", "america"),
+    "toronto": ("Canadá", "canada", "america"),
+    "vancouver": ("Canadá", "canada", "america"),
+    "montreal": ("Canadá", "canada", "america"),
+    "mexico": ("Estados Unidos Mexicanos", "estados-unidos-mexicanos", "america"),
+    "cdmx": ("Estados Unidos Mexicanos", "estados-unidos-mexicanos", "america"),
+    "cancun": ("Estados Unidos Mexicanos", "estados-unidos-mexicanos", "america"),
+    "brasil": ("República Federativa del Brasil", "brasil", "america"),
+    "brazil": ("República Federativa del Brasil", "brasil", "america"),
+    "argentina": ("República Argentina", "argentina", "america"),
+    "buenos aires": ("República Argentina", "argentina", "america"),
+    "peru": ("República del Perú", "peru", "america"),
+    "lima": ("República del Perú", "peru", "america"),
+    "cusco": ("República del Perú", "peru", "america"),
+    "chile": ("República de Chile", "chile", "america"),
+    "santiago": ("República de Chile", "chile", "america"),
+    # Europe & Central Asia (grouped under 'europa' on cancilleria.gov.co)
     "reino unido": ("Reino Unido", "reino-unido-de-gran-bretana-e-irlanda-del-norte", "europa"),
     "uk": ("Reino Unido", "reino-unido-de-gran-bretana-e-irlanda-del-norte", "europa"),
     "united kingdom": ("Reino Unido", "reino-unido-de-gran-bretana-e-irlanda-del-norte", "europa"),
+    "london": ("Reino Unido", "reino-unido-de-gran-bretana-e-irlanda-del-norte", "europa"),
     "union europea": ("Unión Europea", "union-europea", "europa"),
     "eu": ("Unión Europea", "union-europea", "europa"),
     "ue": ("Unión Europea", "union-europea", "europa"),
     "european union": ("Unión Europea", "union-europea", "europa"),
-    "qatar": ("Estado de Catar", "estado-de-catar", "africa"),
-    "catar": ("Estado de Catar", "estado-de-catar", "africa"),
+    "schengen": ("Unión Europea", "union-europea", "europa"),
+    "hungria": ("Hungría", "hungria", "europa"),
+    "hungary": ("Hungría", "hungria", "europa"),
+    "budapest": ("Hungría", "hungria", "europa"),
     "kirguistan": ("República Kirguisa", "republica-kirguisa", "europa"),
     "kyrgyzstan": ("República Kirguisa", "republica-kirguisa", "europa"),
+    "bishkek": ("República Kirguisa", "republica-kirguisa", "europa"),
     "kazajistan": ("República de Kazajistán", "republica-de-kazajistan", "europa"),
     "kazakhstan": ("República de Kazajistán", "republica-de-kazajistan", "europa"),
+    "almaty": ("República de Kazajistán", "republica-de-kazajistan", "europa"),
+    "astana": ("República de Kazajistán", "republica-de-kazajistan", "europa"),
+    "uzbekistan": ("República de Uzbekistán", "republica-de-uzbekistan", "asia"),
+    "tashkent": ("República de Uzbekistán", "republica-de-uzbekistan", "asia"),
+    "samarkand": ("República de Uzbekistán", "republica-de-uzbekistan", "asia"),
+    "eslovaquia": ("República Eslovaca", "republica-eslovaca", "europa"),
+    "slovakia": ("República Eslovaca", "republica-eslovaca", "europa"),
+    "bratislava": ("República Eslovaca", "republica-eslovaca", "europa"),
+    "republica checa": ("República Checa", "republica-checa", "europa"),
+    "czech republic": ("República Checa", "republica-checa", "europa"),
+    "czechia": ("República Checa", "republica-checa", "europa"),
+    "prague": ("República Checa", "republica-checa", "europa"),
+    "praga": ("República Checa", "republica-checa", "europa"),
+    "austria": ("República de Austria", "republica-de-austria", "europa"),
+    "vienna": ("República de Austria", "republica-de-austria", "europa"),
+    "viena": ("República de Austria", "republica-de-austria", "europa"),
+    "polonia": ("República de Polonia", "republica-de-polonia", "europa"),
+    "poland": ("República de Polonia", "republica-de-polonia", "europa"),
+    "warsaw": ("República de Polonia", "republica-de-polonia", "europa"),
+    "krakow": ("República de Polonia", "republica-de-polonia", "europa"),
     "turquia": ("República de Türkiye", "republica-de-turkiye", "europa"),
     "turkey": ("República de Türkiye", "republica-de-turkiye", "europa"),
     "turkiye": ("República de Türkiye", "republica-de-turkiye", "europa"),
-    "corea del sur": ("República de Corea", "republica-de-corea", "asia"),
-    "south korea": ("República de Corea", "republica-de-corea", "asia"),
+    "istanbul": ("República de Türkiye", "republica-de-turkiye", "europa"),
     "rusia": ("Federación de Rusia", "federacion-de-rusia", "europa"),
     "russia": ("Federación de Rusia", "federacion-de-rusia", "europa"),
     "holanda": ("Reino de los Países Bajos", "reino-de-los-paises-bajos", "europa"),
     "paises bajos": ("Reino de los Países Bajos", "reino-de-los-paises-bajos", "europa"),
     "netherlands": ("Reino de los Países Bajos", "reino-de-los-paises-bajos", "europa"),
+    "amsterdam": ("Reino de los Países Bajos", "reino-de-los-paises-bajos", "europa"),
     "suiza": ("Confederación Suiza", "confederacion-suiza", "europa"),
     "switzerland": ("Confederación Suiza", "confederacion-suiza", "europa"),
+    "zurich": ("Confederación Suiza", "confederacion-suiza", "europa"),
+    "geneva": ("Confederación Suiza", "confederacion-suiza", "europa"),
     "alemania": ("República Federal de Alemania", "republica-federal-de-alemania", "europa"),
     "germany": ("República Federal de Alemania", "republica-federal-de-alemania", "europa"),
+    "berlin": ("República Federal de Alemania", "republica-federal-de-alemania", "europa"),
+    "munich": ("República Federal de Alemania", "republica-federal-de-alemania", "europa"),
     "espana": ("Reino de España", "reino-de-espana", "europa"),
     "spain": ("Reino de España", "reino-de-espana", "europa"),
+    "madrid": ("Reino de España", "reino-de-espana", "europa"),
+    "barcelona": ("Reino de España", "reino-de-espana", "europa"),
+    "francia": ("República Francesa", "republica-francesa", "europa"),
+    "france": ("República Francesa", "republica-francesa", "europa"),
+    "paris": ("República Francesa", "republica-francesa", "europa"),
+    "italia": ("República Italiana", "republica-italiana", "europa"),
+    "italy": ("República Italiana", "republica-italiana", "europa"),
+    "rome": ("República Italiana", "republica-italiana", "europa"),
+    "roma": ("República Italiana", "republica-italiana", "europa"),
+    "milan": ("República Italiana", "republica-italiana", "europa"),
+    "portugal": ("República Portuguesa", "republica-portuguesa", "europa"),
+    "lisbon": ("República Portuguesa", "republica-portuguesa", "europa"),
+    "lisboa": ("República Portuguesa", "republica-portuguesa", "europa"),
+    "grecia": ("República Helénica", "republica-helenica", "europa"),
+    "greece": ("República Helénica", "republica-helenica", "europa"),
+    "athens": ("República Helénica", "republica-helenica", "europa"),
+    "belgica": ("Reino de Bélgica", "reino-de-belgica", "europa"),
+    "belgium": ("Reino de Bélgica", "reino-de-belgica", "europa"),
+    "brussels": ("Reino de Bélgica", "reino-de-belgica", "europa"),
+    "suecia": ("Reino de Suecia", "reino-de-suecia", "europa"),
+    "sweden": ("Reino de Suecia", "reino-de-suecia", "europa"),
+    "noruega": ("Reino de Noruega", "reino-de-noruega", "europa"),
+    "norway": ("Reino de Noruega", "reino-de-noruega", "europa"),
+    "dinamarca": ("Reino de Dinamarca", "reino-de-dinamarca", "europa"),
+    "denmark": ("Reino de Dinamarca", "reino-de-dinamarca", "europa"),
+    "finlandia": ("República de Finlandia", "republica-de-finlandia", "europa"),
+    "finland": ("República de Finlandia", "republica-de-finlandia", "europa"),
+    "croacia": ("República de Croacia", "republica-de-croacia", "europa"),
+    "croatia": ("República de Croacia", "republica-de-croacia", "europa"),
+    "rumania": ("Rumania", "rumania", "europa"),
+    "romania": ("Rumania", "rumania", "europa"),
+    "bulgaria": ("República de Bulgaria", "republica-de-bulgaria", "europa"),
+    "irlanda": ("Irlanda", "irlanda", "europa"),
+    "ireland": ("Irlanda", "irlanda", "europa"),
+    # Asia & Oceania
+    "japon": ("Japón", "japon", "asia"),
+    "japan": ("Japón", "japon", "asia"),
+    "tokyo": ("Japón", "japon", "asia"),
+    "kyoto": ("Japón", "japon", "asia"),
+    "osaka": ("Japón", "japon", "asia"),
+    "corea del sur": ("República de Corea", "republica-de-corea", "asia"),
+    "south korea": ("República de Corea", "republica-de-corea", "asia"),
+    "seoul": ("República de Corea", "republica-de-corea", "asia"),
+    "china": ("República Popular China", "republica-popular-china", "asia"),
+    "beijing": ("República Popular China", "republica-popular-china", "asia"),
+    "shanghai": ("República Popular China", "republica-popular-china", "asia"),
+    "tailandia": ("Reino de Tailandia", "reino-de-tailandia", "asia"),
+    "thailand": ("Reino de Tailandia", "reino-de-tailandia", "asia"),
+    "bangkok": ("Reino de Tailandia", "reino-de-tailandia", "asia"),
+    "vietnam": ("República Socialista de Vietnam", "republica-socialista-de-vietnam", "asia"),
+    "india": ("República de la India", "republica-de-la-india", "asia"),
+    "indonesia": ("República de Indonesia", "republica-de-indonesia", "asia"),
+    "bali": ("República de Indonesia", "republica-de-indonesia", "asia"),
+    "singapur": ("República de Singapur", "republica-de-singapur", "asia"),
+    "singapore": ("República de Singapur", "republica-de-singapur", "asia"),
+    "malasia": ("Malasia", "malasia", "asia"),
+    "malaysia": ("Malasia", "malasia", "asia"),
+    "filipinas": ("República de Filipinas", "republica-de-filipinas", "asia"),
+    "philippines": ("República de Filipinas", "republica-de-filipinas", "asia"),
+    "australia": ("Mancomunidad de Australia", "australia", "asia"),
+    "sydney": ("Mancomunidad de Australia", "australia", "asia"),
+    "nueva zelanda": ("Nueva Zelanda", "nueva-zelanda", "asia"),
+    "new zealand": ("Nueva Zelanda", "nueva-zelanda", "asia"),
+    # Africa & Middle East
+    "qatar": ("Estado de Catar", "estado-de-catar", "africa"),
+    "catar": ("Estado de Catar", "estado-de-catar", "africa"),
+    "doha": ("Estado de Catar", "estado-de-catar", "africa"),
     "emiratos arabes": ("Emiratos Árabes Unidos", "emiratos-arabes-unidos", "africa"),
     "emiratos arabes unidos": ("Emiratos Árabes Unidos", "emiratos-arabes-unidos", "africa"),
     "uae": ("Emiratos Árabes Unidos", "emiratos-arabes-unidos", "africa"),
-    "nueva zelanda": ("Nueva Zelanda", "nueva-zelanda", "asia"),
-    "new zealand": ("Nueva Zelanda", "nueva-zelanda", "asia"),
+    "dubai": ("Emiratos Árabes Unidos", "emiratos-arabes-unidos", "africa"),
+    "egipto": ("República Árabe de Egipto", "republica-arabe-de-egipto", "africa"),
+    "egypt": ("República Árabe de Egipto", "republica-arabe-de-egipto", "africa"),
+    "cairo": ("República Árabe de Egipto", "republica-arabe-de-egipto", "africa"),
+    "marruecos": ("Reino de Marruecos", "reino-de-marruecos", "africa"),
+    "morocco": ("Reino de Marruecos", "reino-de-marruecos", "africa"),
+    "sudafrica": ("República de Sudáfrica", "republica-de-sudafrica", "africa"),
+    "south africa": ("República de Sudáfrica", "republica-de-sudafrica", "africa"),
+    "kenia": ("República de Kenia", "republica-de-kenia", "africa"),
+    "kenya": ("República de Kenia", "republica-de-kenia", "africa"),
 }
 
 def normalize_text(text: str) -> str:
@@ -91,28 +243,57 @@ class CleanBodyExtractor(HTMLParser):
     def get_text(self):
         return "".join(self.fed)
 
-def probe_url_exists(url: str, timeout: int = 5) -> bool:
-    """Verifies live if a URL responds HTTP 200 via lightweight HEAD request."""
-    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"}
+def _http_get_browser_emulated(url: str, timeout: int = 10) -> tuple[int, str]:
+    """Emulates a real Chrome browser TLS/HTTP2 fingerprint (`curl_cffi`) to avoid WAF 403s."""
+    if url in _HTML_CACHE:
+        return 200, _HTML_CACHE[url]
+
+    if _HAS_CURL_CFFI and cffi_requests is not None:
+        for profile in ("chrome124", "chrome120", "safari17_0"):
+            try:
+                resp = cffi_requests.get(
+                    url,
+                    impersonate=profile,
+                    headers=BROWSER_HEADERS,
+                    timeout=timeout,
+                    allow_redirects=True,
+                )
+                if resp.status_code == 200 and resp.text:
+                    _HTML_CACHE[url] = resp.text
+                    return 200, resp.text
+                if resp.status_code == 404:
+                    return 404, ""
+            except Exception:
+                continue
+
+    req = urllib.request.Request(url, headers=BROWSER_HEADERS, method="GET")
+    with urllib.request.urlopen(req, timeout=timeout) as response:
+        body = response.read().decode("utf-8", errors="ignore")
+        if response.status == 200 and body:
+            _HTML_CACHE[url] = body
+        return response.status, body
+
+
+def probe_url_exists(url: str, timeout: int = 6) -> bool:
+    """Verifies live if a URL responds HTTP 200 using browser-emulated GET (avoids HEAD 403s)."""
     try:
-        req = urllib.request.Request(url, headers=headers, method="HEAD")
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.status == 200
+        status, _ = _http_get_browser_emulated(url, timeout=timeout)
+        return status == 200
     except Exception:
         return False
 
+
 def search_cancilleria_live(country_query: str) -> tuple[str, str]:
     """
-    Queries Cancillería's live search endpoint and filters strictly for canonical
-    bilateral country dossiers, rejecting news articles and press releases.
+    Queries Cancillería's live search endpoint using browser TLS impersonation and filters
+    strictly for canonical bilateral country dossiers.
     Returns (discovered_title, discovered_url) or (None, None).
     """
     search_url = f"https://www.cancilleria.gov.co/search/node?keys={urllib.parse.quote(country_query)}"
-    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/120.0.0.0"}
     try:
-        req = urllib.request.Request(search_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            html = resp.read().decode("utf-8", errors="ignore")
+        status, html = _http_get_browser_emulated(search_url, timeout=10)
+        if status != 200 or not html:
+            return None, None
 
         # Find search result links
         links = re.findall(r'<h3[^>]*>\s*<a[^>]+href=[\"\']([^\"\']+)[\"\'][^>]*>(.*?)</a>', html, re.DOTALL)
@@ -125,27 +306,28 @@ def search_cancilleria_live(country_query: str) -> tuple[str, str]:
             m = re.search(r'/politica-exterior/asuntos-bilaterales/(america|europa|asia|africa)/([a-z0-9\-]+)', href)
             if m:
                 return title, href
-    except Exception as e:
-        print(f"Notice: Live search failed for '{country_query}': {e}", file=sys.stderr)
+    except Exception:
+        pass
 
     return None, None
 
+
 def resolve_country_url(country_query: str) -> tuple[str, str, bool]:
     """
-    Pure live URL resolution (zero local file caching):
-    1. Check alias & canonical slug
+    Multi-tier URL resolution:
+    1. Check `COMMON_ALIASES` & canonical slug (returns canonical URL directly even if WAF challenges live probe)
     2. Deterministic candidate URL probing directly on Cancillería
     3. Filtered live portal search on cancilleria.gov.co
     Returns (official_name, url, is_newly_discovered)
     """
     norm_query = normalize_text(country_query)
 
-    # 1. Alias translation
+    # 1. Alias translation (canonical bilateral URL is deterministic and authoritative)
     if norm_query in COMMON_ALIASES:
         official_name, slug, region = COMMON_ALIASES[norm_query]
         candidate_url = f"https://www.cancilleria.gov.co/politica-exterior/asuntos-bilaterales/{region}/{slug}"
-        if probe_url_exists(candidate_url):
-            return official_name, candidate_url, False
+        probe_url_exists(candidate_url)
+        return official_name, candidate_url, False
 
     # 2. Deterministic slug probing across regions
     slug_base = norm_query.replace(" ", "-")
@@ -165,15 +347,10 @@ def resolve_country_url(country_query: str) -> tuple[str, str, bool]:
 
     return country_query, None, False
 
+
 def fetch_url(url: str, timeout: int = 15) -> str:
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8"
-    }
-    req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req, timeout=timeout) as response:
-        return response.read().decode("utf-8", errors="ignore")
+    _, html = _http_get_browser_emulated(url, timeout=timeout)
+    return html
 
 def extract_clean_content(html_content: str) -> str:
     """Strips outer template chrome to extract the main content text."""

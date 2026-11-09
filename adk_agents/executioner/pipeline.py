@@ -24,28 +24,26 @@ from contracts.trip_spec import TripSpec
 
 
 def parse_trip_spec_input(raw_text: str, state: Any) -> Optional[TripSpec]:
-    """Extracts a `TripSpec` from session state or from a JSON/YAML user message."""
+    """Extracts a `TripSpec` from a JSON/YAML user message (updating state) or falls back to session state."""
+    text = (raw_text or "").strip()
+    if text:
+        fence_match = re.search(r"```(?:yaml|json)?\s*([\s\S]*?)```", text)
+        candidate = fence_match.group(1).strip() if fence_match else text
+
+        for loader in (json.loads, yaml.safe_load):
+            try:
+                loaded = loader(candidate)
+                if isinstance(loaded, dict):
+                    payload = loaded.get("trip_spec", loaded)
+                    if isinstance(payload, dict):
+                        spec = TripSpec.model_validate(payload)
+                        state["trip_spec"] = spec.model_dump(mode="json")
+                        return spec
+            except Exception:
+                continue
+
     if isinstance(state.get("trip_spec"), dict):
         return TripSpec.model_validate(state["trip_spec"])
-
-    text = raw_text.strip()
-    if not text:
-        return None
-
-    fence_match = re.search(r"```(?:yaml|json)?\s*([\s\S]*?)```", text)
-    candidate = fence_match.group(1).strip() if fence_match else text
-
-    for loader in (json.loads, yaml.safe_load):
-        try:
-            loaded = loader(candidate)
-            if isinstance(loaded, dict):
-                payload = loaded.get("trip_spec", loaded)
-                if isinstance(payload, dict):
-                    spec = TripSpec.model_validate(payload)
-                    state["trip_spec"] = spec.model_dump(mode="json")
-                    return spec
-        except Exception:
-            continue
 
     return None
 
@@ -64,10 +62,13 @@ class TravelExecutionPipeline:
             preferred_weather=spec.preferred_weather or "mild",
             dates=spec.timing.dates or "TBD",
             duration_days=spec.timing.duration_days or 14,
+            activity_style=spec.activity_style or "historical and natural exploration",
+            purpose=spec.traveler.purpose or "Tourism",
         )
         flights_data = analyze_flights_from_colombia(
             origin=spec.origin or "Bogotá (BOG)",
             places_to_visit=spec.destinations.places_to_visit,
+            activity_style=spec.activity_style or "",
         )
         budget_data = scout_prices_and_live_currency(
             places_to_visit=spec.destinations.places_to_visit,

@@ -71,7 +71,11 @@ class LiveCancilleriaUrlSource:
                 if not url:
                     continue
                 html = mod.fetch_url(url, timeout=8)
+                if not html:
+                    continue
                 clean_text = mod.extract_clean_content(html)
+                if not clean_text or "just a moment" in clean_text.lower():
+                    continue
                 parsed = mod.parse_policy(clean_text, official_name, mapped_purpose, url)
                 mig_snippet = (parsed.get("asuntos_migratorios") or "").replace("\n", " ").strip()
                 return {

@@ -29,23 +29,16 @@ def _extract_latest_user_text(llm_request: LlmRequest) -> str:
 def enforce_sdd_attempt_gate(
     callback_context: CallbackContext,
 ) -> Optional[types.Content]:
-    """ADK `before_agent_callback` enforcing the 10-attempt SDD limit."""
+    """ADK `before_agent_callback` enforcing the 10-attempt SDD limit.
+
+    If `sdd_status` is already `validated`, allows follow-up user turns to refine or
+    expand the `trip-spec` (e.g., adding more cities/zones or adjusting budget)
+    without tripping the attempt limit.
+    """
     state = callback_context.state
 
     if state.get(TripSpecStateRepository.STATUS_KEY) == "validated":
-        spec = TripSpecStateRepository.load(state)
-        return types.Content(
-            role="model",
-            parts=[
-                types.Part.from_text(
-                    text=(
-                        "### ✅ Validated Trip Specification (`trip-spec`)\n\n"
-                        "Your `trip-spec` is already validated and frozen:\n\n"
-                        f"{spec.to_yaml_block()}"
-                    )
-                )
-            ],
-        )
+        return None
 
     current_attempt = TripSpecStateRepository.increment_attempt(state)
     if current_attempt > MAX_SDD_ATTEMPTS:
@@ -82,4 +75,38 @@ def deterministic_builder_fallback_callback(
             parts=[types.Part.from_text(text=transition["formatted_response"])],
         )
     )
+
+
+def ensure_validated_yaml_in_response_callback(
+    callback_context: CallbackContext,
+    llm_response: LlmResponse,
+) -> Optional[LlmResponse]:
+    """ADK `after_model_callback` ensuring a validated `trip-spec` YAML block is always emitted."""
+    state = callback_context.state
+    if state.get(TripSpecStateRepository.STATUS_KEY) != "validated":
+        return None
+
+    # Do not modify tool-call intermediate turns; only enrich the final text response
+    if llm_response.content and llm_response.content.parts:
+        if any(getattr(p, "function_call", None) for p in llm_response.content.parts):
+            return None
+        existing_text = "\n".join(
+            p.text for p in llm_response.content.parts if getattr(p, "text", None)
+        )
+        spec = TripSpecStateRepository.load(state)
+        yaml_block = spec.to_yaml_block()
+        if "```yaml" not in existing_text or "status: validated" not in existing_text:
+            combined_text = (
+                f"{existing_text.strip()}\n\n{yaml_block}"
+                if existing_text.strip()
+                else yaml_block
+            )
+            return LlmResponse(
+                content=types.Content(
+                    role="model",
+                    parts=[types.Part.from_text(text=combined_text)],
+                )
+            )
+    return None
+
 

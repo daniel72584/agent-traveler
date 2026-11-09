@@ -223,9 +223,9 @@ class TripSpec(BaseModel):
             target_obj = getattr(self, parent_attr) if parent_attr else self
             setattr(target_obj, leaf_attr, value)
 
-        if (
-            self.destinations.places_to_visit
-            and not self.destinations.route_order
+        if self.destinations.places_to_visit and (
+            not self.destinations.route_order
+            or ("places_to_visit" in non_null_updates and "route_order" not in non_null_updates)
         ):
             self.destinations.route_order = list(self.destinations.places_to_visit)
 
