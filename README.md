@@ -30,6 +30,41 @@ Agent Traveler prevents wasted tokens and hallucinated itineraries by enforcing 
 
 ---
 
+## ADK Execution (4-Agent A2A Architecture)
+
+Agent Traveler runs on **Google ADK** using a decoupled **4-Agent Agent-to-Agent (A2A)** cluster ([`adk_agents/run_a2a_cluster.py`](adk_agents/run_a2a_cluster.py)). Each specialist agent runs as an isolated A2A JSON-RPC service (`/.well-known/agent-card.json`) with zero sibling package imports, while the user interacts exclusively with the customer-facing **Orchestrator** on port `8000`:
+
+- **Orchestrator (`:8000` — [`adk_agents/orchestrator`](adk_agents/orchestrator/agent.py))**: Single customer-facing entrypoint in the ADK Web UI. Manages session state and coordinates the specialist agents over A2A JSON-RPC.
+- **Builder (`:8001` — [`adk_agents/builder`](adk_agents/builder/agent.py))**: Conducts the interactive SDD interview until all required parameters are confirmed and freezes the validated `trip-spec` YAML contract.
+- **Executioner (`:8002` — [`adk_agents/executioner`](adk_agents/executioner/agent.py))**: Consumes the validated `trip-spec` to run Cancillería visa verification, Google Maps route generation, flight corridor analysis, and live currency/price scouting.
+- **Revisor (`:8003` — [`adk_agents/revisor`](adk_agents/revisor/agent.py))**: Audits the generated `TripReport` against the `trip-spec` contract and rubric rules before returning an `APPROVE` verdict to the customer.
+
+### Launching the 4-Agent A2A Cluster
+
+```bash
+# Start Builder (:8001), Executioner (:8002), Revisor (:8003), and Orchestrator Web UI (:8000)
+python -m adk_agents.run_a2a_cluster
+```
+
+### Step-by-Step Execution Flow in ADK Web UI
+
+#### 1. Builder Agent (`:8001`) — Validated `trip-spec` Contract
+Once all SDD interview parameters are collected, the Builder freezes the `trip-spec` (`status: validated`) and hands control back to the Orchestrator:
+
+![ADK Execution - Step 1: Validated Trip Specification](assets/adk-step1-builder-spec.png)
+
+#### 2. Executioner Agent (`:8002`) — Unified Trip Report Generation
+The Orchestrator forwards the validated `trip-spec` over A2A to the Executioner, which verifies Cancillería entry policies, maps the ordered route, and builds the complete trip report:
+
+![ADK Execution - Step 2: Unified Trip Report](assets/adk-step2-executioner-report.png)
+
+#### 3. Revisor Agent (`:8003`) — Automated SDD Audit & Approval
+Before presenting the final output, the Orchestrator dispatches the report over A2A to the Revisor (`:8003`) to verify compliance with every `trip-spec` constraint (`APPROVE` — Score `100/100`):
+
+![ADK Execution - Step 3: SDD Revisor A2A Audit](assets/adk-step3-revisor-audit.png)
+
+---
+
 ## Codebase Architecture & Graph Explorer
 
 Agent Traveler uses [Grafeando](.agents/skills/grafeando/SKILL.md) powered by LadybugDB to map AST entities, dependency relationships, call graphs, and blast radius across agents, skills, and schemas.
@@ -99,4 +134,4 @@ Every run logs execution history in [`evals/test_cases.json`](evals/test_cases.j
 
 - [x] **Spec-Driven Development (SDD)**: Interactive interview protocol and validated `trip-spec` schema contract ([`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md)).
 - [x] **Antigravity SDK Test Harness**: Automated evaluation runner that verifies the Step 1 interview gate and blocks premature route/pricing actions ([`evals/run_evals.py`](evals/run_evals.py)).
-- [ ] **Google ADK Migration**: Explore Google Agent Development Kit (ADK) for deterministic state machines and session checkpointing. 
+- [x] **Google ADK & A2A Migration**: 4-agent isolated A2A architecture (`orchestrator`, `builder`, `executioner`, `revisor`) with deterministic state handoffs and automated SDD auditing ([`adk_agents/run_a2a_cluster.py`](adk_agents/run_a2a_cluster.py)).
