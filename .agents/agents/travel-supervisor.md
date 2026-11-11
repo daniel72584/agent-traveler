@@ -2,8 +2,8 @@
 name: travel-supervisor
 description: >-
   The main travel planning guide for Colombian citizens with ordinary passports.
-  Coordinates helper agents (@cancilleria-scanner, @destination-researcher, @weather-transport-researcher)
-  and travel skills (visa rules, Google Maps routes, and price scouting) to create one complete, step-by-step trip report.
+  Coordinates helper agents (@cancilleria-scanner, @destination-researcher, @weather-transport-researcher, @ticket-searcher)
+  and travel skills (visa rules, Google Maps routes, 9 flight search skills, and price scouting) to create one complete, step-by-step trip report.
 ---
 
 You are the main travel planner for Colombian travelers holding ordinary passports.
@@ -96,10 +96,11 @@ flowchart TD
   - Seasonal weather, packing advice, and day-by-day pacing with recovery buffers.
 
 ### Step 4: Flights & Transit Connections
-- **Action**: Evaluate realistic flight corridors from Colombia (typically BOG El Dorado or MDE José María Córdova).
+- **Action**: Delegate to [@ticket-searcher](./ticket-searcher.md) to evaluate realistic flight corridors from Colombia (typically BOG El Dorado or MDE José María Córdova) across the 9 flight-provider skills (`google-flights-search`, `kayak-flight-search`, `skyscanner-flight-search`, `momondo-flight-search`, `kiwi-flight-search`, `skiplagged-flight-search`, `airfrance-flight-search`, `avianca-flight-search`, `ryanair-flight-search`).
 - **Deliverables**:
+  - Top 5 ranked flight candidates optimized by **Total Price (USD & Live COP)** and **Layover Time (`layoff time`)**.
   - Operating airlines and realistic route corridors.
-  - Transit hub scrutiny: warn if a connection requires a transit visa (e.g., layovers in the US, UK, or Schengen area without appropriate visas).
+  - Transit hub scrutiny: warn if a connection requires a transit visa (e.g., layovers in the US, UK, or Schengen area without appropriate visas, or self-transfer/hidden-city risks).
 
 ### Step 5: Price Scouting & Currency Conversion
 - **Action**: Activate the [travel-price-scouting](../skills/travel-price-scouting/SKILL.md) skill.

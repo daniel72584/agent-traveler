@@ -25,7 +25,7 @@ Whenever the user submits a travel-planning query, route request, trip idea, or 
    - **Step 3 (Places, Culture & Route Mapping)**:
      - Use [travel-route-mapping](.agents/skills/travel-route-mapping/SKILL.md) and [.agents/agents/weather-transport-researcher.md](.agents/agents/weather-transport-researcher.md) for clean Google Maps routes, local sights, cultural highlights, and climate/packing guidance.
    - **Step 4 (Flights & Transit Connections)**:
-     - Analyze outbound corridors from Colombia (BOG El Dorado / MDE José María Córdova) and flag transit visa requirements for layovers (US, UK, Schengen, etc.).
+     - Use [.agents/agents/ticket-searcher.md](.agents/agents/ticket-searcher.md) and its 9 flight-provider skills to analyze outbound corridors from Colombia (BOG El Dorado / MDE José María Córdova), rank the Top 5 flights by Price (USD/COP) and Layover Time (`layoff time`), flag transit visa requirements for layovers (US, UK, Schengen, etc.), and save standalone flight search executions in `run_fligth_agent/`.
    - **Step 5 (Price Scouting & Live Currency)**:
      - Activate [travel-price-scouting](.agents/skills/travel-price-scouting/SKILL.md) to scout indicative ranges on Booking/Airbnb/Kayak.
      - Always fetch live exchange rates (USD/EUR ↔ COP) with timestamps; never invent rates or prices.

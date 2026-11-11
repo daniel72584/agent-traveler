@@ -135,3 +135,7 @@ Every run logs execution history in [`evals/test_cases.json`](evals/test_cases.j
 - [x] **Spec-Driven Development (SDD)**: Interactive interview protocol and validated `trip-spec` schema contract ([`.agents/specs/trip-spec-schema.md`](.agents/specs/trip-spec-schema.md)).
 - [x] **Antigravity SDK Test Harness**: Automated evaluation runner that verifies the Step 1 interview gate and blocks premature route/pricing actions ([`evals/run_evals.py`](evals/run_evals.py)).
 - [x] **Google ADK & A2A Migration**: 4-agent isolated A2A architecture (`orchestrator`, `builder`, `executioner`, `revisor`) with deterministic state handoffs and automated SDD auditing ([`adk_agents/run_a2a_cluster.py`](adk_agents/run_a2a_cluster.py)).
+- [x] **Flight Ticket Searcher Agent & 9 Provider Skills ([`plan-fligth.md`](plan-fligth.md))**:
+  - [x] **Phase 2**: Create 9 per-page flight search skills (`.agents/skills/`): Google Flights, KAYAK, Skyscanner, Momondo, Kiwi.com, Skiplagged, Air France, Avianca, and Ryanair.
+  - [x] **Phase 3**: Define the Markdown Ticket Searcher Agent ([`.agents/agents/ticket-searcher.md`](.agents/agents/ticket-searcher.md)) returning the Top 5 flights ranked by **Price (USD/COP)** and **Layover Time (`layoff time`)**.
+  - [x] **Phase 4**: Native Antigravity execution across the 9 skills with saved execution logs in [`run_fligth_agent/`](run_fligth_agent/).
