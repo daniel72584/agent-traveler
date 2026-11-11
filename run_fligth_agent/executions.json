@@ -1,0 +1,106 @@
+{
+  "agent": ".agents/agents/ticket-searcher.md",
+  "execution_environment": "antigravity_native",
+  "executions": [
+    {
+      "execution_id": "antigravity-flight-run-001",
+      "timestamp": "2026-11-10T23:58:00Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "destination": "Budapest (BUD) or Vienna (VIE)",
+        "return_origin": "Vilnius (VNO) or Riga (RIX)",
+        "return_destination": "Bogotá (BOG)",
+        "departure_date": "2027-03-09 / 2027-03-10",
+        "return_date": "2027-04-10",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,242.13 COP (Source: https://api.exchangerate-api.com/v4/latest/USD & Google Finance 3,226-3,284 COP, fetched 2026-11-10 23:58 UTC)",
+      "usd_cop_rate": 3242.13,
+      "markdown_report_file": "run_fligth_agent/run_01_bog_bud_vie_return_vno_rix_bog.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France + KLM / airBaltic (Multi-City Protected)",
+          "route": "Out: BOG -> CDG -> BUD/VIE (Mar 9) | Ret: RIX -> AMS/CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 10m at CDG (13h 55m total) | Ret: 2h 25m at AMS/CDG (15h 45m total)",
+          "price_usd": 945,
+          "price_cop": 3063813,
+          "ranking_score": 91.5,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Google Flights",
+          "skill_name": "google-flights-search",
+          "airlines": "Lufthansa + Austrian / airBaltic (Star Alliance Multi-City)",
+          "route": "Out: BOG -> FRA -> VIE/BUD (Mar 10) | Ret: VNO/RIX -> FRA -> BOG (Apr 10)",
+          "layover_time": "Out: 1h 55m at FRA (13h 35m total) | Ret: 2h 35m at FRA (15h 55m total)",
+          "price_usd": 965,
+          "price_cop": 3128655,
+          "ranking_score": 89.2,
+          "search_url": "https://www.google.com/travel/flights?q=Flights+from+BOG+to+VIE+on+2027-03-10"
+        },
+        {
+          "rank": 3,
+          "provider": "Avianca",
+          "skill_name": "avianca-flight-search",
+          "airlines": "Avianca + Iberia / airBaltic",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: RIX -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 25m at MAD (14h 10m total) | Ret: 3h 15m at MAD (16h 30m total)",
+          "price_usd": 910,
+          "price_cop": 2950338,
+          "ranking_score": 86.8,
+          "search_url": "https://www.avianca.com/es/"
+        },
+        {
+          "rank": 4,
+          "provider": "KAYAK",
+          "skill_name": "kayak-flight-search",
+          "airlines": "Turkish Airlines (Includes 23kg Checked Bag)",
+          "route": "Out: BOG -> IST -> BUD/VIE (Mar 9) | Ret: VNO/RIX -> IST -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 10m at IST (17h 20m total) | Ret: 3h 40m at IST (18h 10m total)",
+          "price_usd": 980,
+          "price_cop": 3177287,
+          "ranking_score": 81.4,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        },
+        {
+          "rank": 5,
+          "provider": "Kiwi.com",
+          "skill_name": "kiwi-flight-search",
+          "airlines": "Avianca + Wizz Air / Ryanair / airBaltic (Virtual Interlining Self-Transfer)",
+          "route": "Out: BOG -> MAD -> BUD/VIE (Mar 9) | Ret: VNO/RIX -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 4h 15m self-transfer at MAD (15h 55m total) | Ret: 4h 40m self-transfer at MAD (17h 45m total)",
+          "price_usd": 835,
+          "price_cop": 2707179,
+          "ranking_score": 74.0,
+          "search_url": "https://www.kiwi.com/en/cheap-flights/"
+        }
+      ],
+      "intra_europe_connector": {
+        "provider": "Ryanair / airBaltic",
+        "skill_name": "ryanair-flight-search",
+        "routes": [
+          {
+            "route": "Vienna (VIE) -> Riga (RIX)",
+            "duration": "1h 55m non-stop",
+            "price_usd_with_10kg_carryon": 58,
+            "price_cop": 188044
+          },
+          {
+            "route": "Vienna (VIE) -> Vilnius (VNO)",
+            "duration": "1h 45m non-stop",
+            "price_usd_with_10kg_carryon": 61,
+            "price_cop": 197770
+          }
+        ],
+        "search_url": "https://www.ryanair.com/gb/en"
+      }
+    }
+  ]
+}
+
