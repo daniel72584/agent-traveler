@@ -1,28 +1,25 @@
 name: Detect PII
 
 on:
-  issues:
-    types: [opened, edited]
-  issue_comment:
-    types: [created, edited]
   pull_request:
-    types: [opened, edited]
-  pull_request_review_comment:
-    types: [created, edited]
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
 
 permissions:
-  issues: write
-  pull-requests: write
+  contents: read
 
 jobs:
   detect-pii:
     runs-on: ubuntu-latest
     steps:
-      - name: Run PII detector
-        uses: rob-derosa/pii-detector@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          azure-cognitive-subscription-key: ${{ secrets.AZURE_COGNITIVE_SUBSCRIPTION_KEY }}
-          azure-cognitive-endpoint: ${{ secrets.AZURE_COGNITIVE_ENDPOINT }}
-          categories: "email|ip|phone number"
-          label-text: "PII Detected!!"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.12"
+
+      - name: Run local PII detector
+        run: python3 .agents/skills/pii-detection/scripts/pii_guard.py --mode check
