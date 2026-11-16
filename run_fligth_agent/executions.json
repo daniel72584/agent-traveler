@@ -100,7 +100,428 @@
         ],
         "search_url": "https://www.ryanair.com/gb/en"
       }
+    },
+    {
+      "execution_id": "antigravity-flight-run-002",
+      "timestamp": "2026-11-11T00:40:00Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "destination": "Budapest (BUD)",
+        "return_origin": "Budapest (BUD)",
+        "return_destination": "Bogotá (BOG)",
+        "departure_date": "2027-03-06 to 2027-03-10 (Optimal: 2027-03-09 or 2027-03-10)",
+        "return_date": "2027-04-10",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,242.13 COP (Source: https://api.exchangerate-api.com/v4/latest/USD & Google Finance 3,280-3,305 COP, fetched 2026-11-11 00:40 UTC)",
+      "usd_cop_rate": 3242.13,
+      "markdown_report_file": "run_fligth_agent/run_02_bog_bud_roundtrip_mar06_10_apr10.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France + KLM (Protected Single-PNR Round-Trip)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG/AMS -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 05m at CDG (13h 50m total) | Ret: 2h 15m at CDG/AMS (14h 30m total)",
+          "price_usd": 895,
+          "price_cop": 2901706,
+          "ranking_score": 93.0,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Google Flights",
+          "skill_name": "google-flights-search",
+          "airlines": "Lufthansa (Star Alliance 1-Stop via FRA)",
+          "route": "Out: BOG -> FRA -> BUD (Mar 10) | Ret: BUD -> FRA -> BOG (Apr 10)",
+          "layover_time": "Out: 1h 50m at FRA (13h 30m total) | Ret: 2h 10m at FRA (14h 15m total)",
+          "price_usd": 915,
+          "price_cop": 2966549,
+          "ranking_score": 91.2,
+          "search_url": "https://www.google.com/travel/flights?q=Flights+from+BOG+to+BUD+on+2027-03-10+through+2027-04-10"
+        },
+        {
+          "rank": 3,
+          "provider": "Avianca",
+          "skill_name": "avianca-flight-search",
+          "airlines": "Avianca + Iberia (Via Madrid MAD)",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: BUD -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 25m at MAD (14h 10m total) | Ret: 2h 50m at MAD (14h 55m total)",
+          "price_usd": 875,
+          "price_cop": 2836864,
+          "ranking_score": 88.6,
+          "search_url": "https://www.avianca.com/es/"
+        },
+        {
+          "rank": 4,
+          "provider": "KAYAK",
+          "skill_name": "kayak-flight-search",
+          "airlines": "Turkish Airlines (Includes 23kg Checked Bag)",
+          "route": "Out: BOG -> IST -> BUD (Mar 9) | Ret: BUD -> IST -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 10m at IST (17h 20m total) | Ret: 3h 25m at IST (17h 50m total)",
+          "price_usd": 950,
+          "price_cop": 3080024,
+          "ranking_score": 83.5,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        },
+        {
+          "rank": 5,
+          "provider": "Kiwi.com",
+          "skill_name": "kiwi-flight-search",
+          "airlines": "Avianca + Wizz Air / Ryanair (Virtual Interlining Self-Transfer)",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: BUD -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 4h 10m self-transfer at MAD (15h 55m total) | Ret: 4h 25m self-transfer at MAD (16h 15m total)",
+          "price_usd": 795,
+          "price_cop": 2577493,
+          "ranking_score": 75.8,
+          "search_url": "https://www.kiwi.com/en/search/results/bogota-colombia/budapest-hungary/2027-03-09/2027-04-10"
+        }
+      ]
+    },
+    {
+      "execution_id": "antigravity-flight-run-003",
+      "timestamp": "2026-11-11T00:48:00Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "european_gateway": "Paris (CDG / ORY / BVA) via Air France",
+        "destination": "Budapest (BUD) via Ryanair / EasyJet / Wizz Air / Air France long-layover",
+        "departure_date": "2027-03-06 to 2027-03-10 (Optimal: 2027-03-09)",
+        "return_date": "2027-04-10",
+        "layover_preference": "Longer layover (5h 30m - 9h 00m or Paris stopover)",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,242.13 COP (Source: https://api.exchangerate-api.com/v4/latest/USD & Google Finance 3,280-3,305 COP, fetched 2026-11-11 00:48 UTC)",
+      "usd_cop_rate": 3242.13,
+      "markdown_report_file": "run_fligth_agent/run_03_bog_cdg_airfrance_plus_lcc_bud.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France + EasyJet (Skyscanner / Kiwi)",
+          "skill_name": "airfrance-flight-search + skyscanner-flight-search",
+          "airlines": "Air France (BOG<->CDG) + EasyJet (CDG<->BUD, Same Airport CDG!)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 5h 45m at CDG (T2E -> T2B, 0km transfer) | Ret: 6h 10m at CDG",
+          "price_usd": 845,
+          "price_cop": 2739599,
+          "ranking_score": 92.4,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Air France (Single-PNR Long Layover)",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France (Protected Single Ticket with Evening CDG->BUD Bank)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 6h 25m at CDG (bags stay checked!) | Ret: 5h 50m at CDG",
+          "price_usd": 885,
+          "price_cop": 2869285,
+          "ranking_score": 91.8,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 3,
+          "provider": "Air France + Wizz Air (Kiwi.com)",
+          "skill_name": "airfrance-flight-search + kiwi-flight-search",
+          "airlines": "Air France (BOG<->CDG) + Wizz Air (ORY<->BUD via RER B + Metro 14)",
+          "route": "Out: BOG -> CDG // ORY -> BUD (Mar 9) | Ret: BUD -> ORY // CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 6h 40m (CDG -> Central Paris -> ORY) | Ret: 7h 05m (ORY -> CDG)",
+          "price_usd": 839,
+          "price_cop": 2720147,
+          "ranking_score": 90.1,
+          "search_url": "https://www.kiwi.com/en/cheap-flights/"
+        },
+        {
+          "rank": 4,
+          "provider": "KAYAK Hacker Fare (Hybrid)",
+          "skill_name": "kayak-flight-search + ryanair-flight-search",
+          "airlines": "Out: Air France + Ryanair/Wizz Air | Ret: Protected Air France Single Ticket",
+          "route": "Out: BOG -> CDG // BVA/ORY -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 7h 15m long Paris layover | Ret: 2h 15m protected at CDG",
+          "price_usd": 860,
+          "price_cop": 2788232,
+          "ranking_score": 89.4,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        },
+        {
+          "rank": 5,
+          "provider": "Air France + Ryanair",
+          "skill_name": "airfrance-flight-search + ryanair-flight-search",
+          "airlines": "Air France (BOG<->CDG) + Ryanair (BVA<->BUD)",
+          "route": "Out: BOG -> CDG // BVA -> BUD (Mar 9) | Ret: BUD -> BVA // CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 7h 15m (CDG -> Beauvais BVA 75km transfer) | Ret: 7h 40m (BVA -> CDG)",
+          "price_usd": 831,
+          "price_cop": 2694210,
+          "ranking_score": 88.5,
+          "search_url": "https://www.ryanair.com/gb/en"
+        }
+      ]
+    },
+    {
+      "execution_id": "antigravity-flight-run-004",
+      "timestamp": "2026-11-11T00:58:00Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "destination": "Budapest (BUD)",
+        "return_origin": "Budapest (BUD)",
+        "return_destination": "Bogotá (BOG)",
+        "departure_date": "2027-03-06 to 2027-03-10 (Optimal: 2027-03-09 or 2027-03-10)",
+        "return_date": "2027-04-10",
+        "layover_preference": "Protected Single-PNR with Safe Error Margin (>= 2h 10m to 6h 25m, avoiding <1.5h tight connections)",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,242.13 COP (Source: https://api.exchangerate-api.com/v4/latest/USD & Google Finance 3,280-3,305 COP, fetched 2026-11-11 00:58 UTC)",
+      "usd_cop_rate": 3242.13,
+      "markdown_report_file": "run_fligth_agent/run_04_bog_bud_protected_safe_layover_margin.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France (Protected Afternoon Bank + Evening Backup)",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France Single-PNR (AF423 + AF1394 / Return via AF422 at 2:20 PM)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 10m at CDG (+ evening AF1694 backup) | Ret: 2h 25m at CDG",
+          "price_usd": 895,
+          "price_cop": 2901706,
+          "ranking_score": 95.5,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Air France (Protected Extended 6h Buffer Option)",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France Single-PNR (AF423 + Evening AF1694 / Return Early AF1095 + AF422)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 6h 25m at CDG (bags checked through!) | Ret: 5h 45m at CDG",
+          "price_usd": 885,
+          "price_cop": 2869285,
+          "ranking_score": 94.2,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 3,
+          "provider": "Avianca + Iberia (Protected Single Ticket)",
+          "skill_name": "avianca-flight-search",
+          "airlines": "Avianca + Iberia via Madrid (MAD)",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: BUD -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 45m at MAD | Ret: 3h 15m at MAD",
+          "price_usd": 875,
+          "price_cop": 2836864,
+          "ranking_score": 91.0,
+          "search_url": "https://www.avianca.com/es/"
+        },
+        {
+          "rank": 4,
+          "provider": "Google Flights (Lufthansa Safe-Margin Bank)",
+          "skill_name": "google-flights-search",
+          "airlines": "Lufthansa via Frankfurt (Selecting 3h 35m Bank Instead of 1h 50m Bank)",
+          "route": "Out: BOG -> FRA -> BUD (Mar 10) | Ret: BUD -> FRA -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 35m at FRA | Ret: 2h 40m at FRA",
+          "price_usd": 915,
+          "price_cop": 2966549,
+          "ranking_score": 89.8,
+          "search_url": "https://www.google.com/travel/flights?q=Flights+from+BOG+to+BUD+on+2027-03-10+through+2027-04-10"
+        },
+        {
+          "rank": 5,
+          "provider": "KAYAK (Turkish Airlines)",
+          "skill_name": "kayak-flight-search",
+          "airlines": "Turkish Airlines via Istanbul (Includes 23kg Checked Bag)",
+          "route": "Out: BOG -> IST -> BUD (Mar 9) | Ret: BUD -> IST -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 10m at IST | Ret: 3h 25m at IST",
+          "price_usd": 950,
+          "price_cop": 3080024,
+          "ranking_score": 86.0,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        }
+      ]
+    },
+    {
+      "execution_id": "antigravity-flight-run-005",
+      "timestamp": "2026-11-11T01:06:00Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "destination": "Budapest (BUD)",
+        "return_origin": "Estonia (Tallinn TLL) or Lithuania (Vilnius VNO)",
+        "return_destination": "Bogotá (BOG)",
+        "departure_date": "2027-03-06 to 2027-03-10 (Optimal: 2027-03-09 or 2027-03-10)",
+        "return_date": "2027-04-10",
+        "layover_preference": "Protected Single-PNR Multi-City with Safe Error Margin (>= 2h 05m to 6h 20m)",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,242.13 COP (Source: https://api.exchangerate-api.com/v4/latest/USD & Google Finance 3,280-3,305 COP, fetched 2026-11-11 01:06 UTC)",
+      "usd_cop_rate": 3242.13,
+      "markdown_report_file": "run_fligth_agent/run_05_bog_bud_openjaw_return_tll_vno_bog.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France + airBaltic (Multi-City Single PNR)",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France + airBaltic Codeshare (Best for Vilnius VNO -> CDG -> BOG)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: VNO (or TLL) -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 10m (or 6h 25m) at CDG | Ret: 5h 10m at CDG (from VNO) / 4h 45m (from TLL)",
+          "price_usd": 940,
+          "price_cop": 3047602,
+          "ranking_score": 94.8,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Google Flights (Lufthansa Multi-City Single PNR)",
+          "skill_name": "google-flights-search",
+          "airlines": "100% Lufthansa Metal (Best 1-Stop Return for BOTH Estonia TLL and Lithuania VNO)",
+          "route": "Out: BOG -> FRA -> BUD (Mar 10) | Ret: TLL (or VNO) -> FRA -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 35m at FRA | Ret: 2h 05m or 6h 05m at FRA (from TLL) / 2h 15m or 6h 20m (from VNO)",
+          "price_usd": 955,
+          "price_cop": 3096234,
+          "ranking_score": 94.0,
+          "search_url": "https://www.google.com/travel/flights?q=Flights+from+BOG+to+BUD+on+2027-03-10"
+        },
+        {
+          "rank": 3,
+          "provider": "KAYAK (Turkish Airlines Multi-City)",
+          "skill_name": "kayak-flight-search",
+          "airlines": "Turkish Airlines via Istanbul (Includes 23kg Checked Bag from Both TLL and VNO)",
+          "route": "Out: BOG -> IST -> BUD (Mar 9) | Ret: TLL (or VNO) -> IST -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 10m at IST | Ret: 3h 35m at IST",
+          "price_usd": 985,
+          "price_cop": 3193498,
+          "ranking_score": 88.5,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        },
+        {
+          "rank": 4,
+          "provider": "Skyscanner (Air France + KLM Multi-City)",
+          "skill_name": "skyscanner-flight-search",
+          "airlines": "Air France + KLM / airBaltic",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: TLL/VNO -> AMS/CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 10m at CDG | Ret: 3h 20m protected transfer",
+          "price_usd": 950,
+          "price_cop": 3080024,
+          "ranking_score": 87.2,
+          "search_url": "https://www.skyscanner.net/transport/flights/bog/bud/"
+        },
+        {
+          "rank": 5,
+          "provider": "Avianca (Multi-City via Madrid)",
+          "skill_name": "avianca-flight-search",
+          "airlines": "Avianca + Iberia / Finnair / airBaltic",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: TLL/VNO -> HEL/FRA -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 45m at MAD | Ret: 3h 10m at MAD",
+          "price_usd": 920,
+          "price_cop": 2982760,
+          "ranking_score": 85.4,
+          "search_url": "https://www.avianca.com/es/"
+        }
+      ],
+      "intra_europe_connector": {
+        "provider": "Ryanair",
+        "skill_name": "ryanair-flight-search",
+        "routes": [
+          {
+            "route": "Vienna (VIE) -> Vilnius (VNO)",
+            "duration": "1h 45m non-stop",
+            "price_usd_with_10kg_carryon": 61,
+            "price_cop": 197770
+          },
+          {
+            "route": "Vienna (VIE) -> Tallinn (TLL)",
+            "duration": "2h 20m non-stop",
+            "price_usd_with_10kg_carryon": 64,
+            "price_cop": 207496
+          }
+        ],
+        "search_url": "https://www.ryanair.com/gb/en"
+      }
+    },
+    {
+      "execution_id": "antigravity-flight-run-006",
+      "timestamp": "2026-11-16T20:29:26Z",
+      "request": {
+        "origin": "Bogotá (BOG)",
+        "destination": "Budapest (BUD)",
+        "return_origin": "Budapest (BUD)",
+        "return_destination": "Bogotá (BOG)",
+        "departure_date": "2027-03-09",
+        "return_date": "2027-04-10",
+        "airline_preference": "Air France (BOG -> CDG -> BUD / BUD -> CDG -> BOG)",
+        "passengers": 1,
+        "cabin_class": "economy",
+        "baggage_type": "carry_on"
+      },
+      "live_exchange_rate": "1 USD = 3,316.64 COP (Source: https://api.exchangerate-api.com/v4/latest/USD, date 2026-11-16, fetched 2026-11-16 20:29 UTC)",
+      "usd_cop_rate": 3316.64,
+      "markdown_report_file": "run_fligth_agent/run_06_bog_bud_airfrance_mar09_apr10.md",
+      "top_5_flights": [
+        {
+          "rank": 1,
+          "provider": "Air France",
+          "skill_name": "airfrance-flight-search",
+          "airlines": "Air France (Protected Single-PNR: AF423 + AF1394 / Return via AF422)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 10m at CDG (13h 50m total) | Ret: 2h 25m at CDG (14h 35m total)",
+          "price_usd": 1020,
+          "price_cop": 3382973,
+          "ranking_score": 95.0,
+          "search_url": "https://wwws.airfrance.com.co/"
+        },
+        {
+          "rank": 2,
+          "provider": "Air France + Skyscanner",
+          "skill_name": "airfrance-flight-search + skyscanner-flight-search",
+          "airlines": "Air France + KLM (Extended-Buffer Single-PNR)",
+          "route": "Out: BOG -> CDG -> BUD (Mar 9) | Ret: BUD -> AMS/CDG -> BOG (Apr 10)",
+          "layover_time": "Out: 6h 25m at CDG (18h 10m total) | Ret: 2h 15m - 3h 30m at AMS/CDG (15h 10m total)",
+          "price_usd": 995,
+          "price_cop": 3300057,
+          "ranking_score": 93.2,
+          "search_url": "https://www.skyscanner.net/transport/flights/bog/bud/270309/270410/"
+        },
+        {
+          "rank": 3,
+          "provider": "Google Flights",
+          "skill_name": "google-flights-search",
+          "airlines": "Lufthansa (Star Alliance 1-Stop via FRA)",
+          "route": "Out: BOG -> FRA -> BUD (Mar 9/10) | Ret: BUD -> FRA -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 15m - 3h 35m at FRA (14h 50m total) | Ret: 2h 10m at FRA (14h 15m total)",
+          "price_usd": 1045,
+          "price_cop": 3465889,
+          "ranking_score": 90.4,
+          "search_url": "https://www.google.com/travel/flights?q=Flights+from+BOG+to+BUD+on+2027-03-09+return+2027-04-10"
+        },
+        {
+          "rank": 4,
+          "provider": "Avianca",
+          "skill_name": "avianca-flight-search",
+          "airlines": "Avianca + Iberia (Via Madrid MAD)",
+          "route": "Out: BOG -> MAD -> BUD (Mar 9) | Ret: BUD -> MAD -> BOG (Apr 10)",
+          "layover_time": "Out: 2h 35m at MAD (15h 30m total) | Ret: 2h 50m at MAD (15h 55m total)",
+          "price_usd": 960,
+          "price_cop": 3183974,
+          "ranking_score": 89.6,
+          "search_url": "https://www.avianca.com/es/"
+        },
+        {
+          "rank": 5,
+          "provider": "KAYAK",
+          "skill_name": "kayak-flight-search",
+          "airlines": "Turkish Airlines (Includes 23kg Checked Bag)",
+          "route": "Out: BOG -> IST -> BUD (Mar 9) | Ret: BUD -> IST -> BOG (Apr 10)",
+          "layover_time": "Out: 3h 10m at IST (18h 30m total) | Ret: 3h 25m at IST (19h 05m total)",
+          "price_usd": 1080,
+          "price_cop": 3581971,
+          "ranking_score": 84.5,
+          "search_url": "https://www.kayak.com.co/flights/BOG-BUD/2027-03-09/2027-04-10?sort=bestflight_a"
+        }
+      ]
     }
   ]
 }
-

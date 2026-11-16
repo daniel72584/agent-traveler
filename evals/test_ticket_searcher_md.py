@@ -77,3 +77,18 @@ def test_saved_antigravity_execution_in_run_fligth_agent() -> None:
     assert len(data["executions"]) >= 1
     assert len(data["executions"][0]["top_5_flights"]) == 5
 
+
+def test_flight_evaluator_agent_approves_all_runs_in_run_fligth_agent() -> None:
+    """Verifies `@flight-evaluator` (`FlightRunEvaluator`) approves all 5 runs (`100/100`) in `run_fligth_agent/`."""
+    from evals.eval_flight_runs import evaluate_all_flight_runs
+
+    evaluator_md = REPO_ROOT / ".agents" / "agents" / "flight-evaluator.md"
+    assert evaluator_md.exists()
+
+    summary = evaluate_all_flight_runs()
+    assert summary["all_passed"] is True
+    assert summary["overall_decision"] == "APPROVE"
+    assert summary["passed_runs"] == summary["total_runs"]
+    assert summary["average_score"] == 100.0
+
+
