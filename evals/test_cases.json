@@ -84,6 +84,68 @@
           "full_response": "### ✈️ Trip Specification Interview (SDD)\n\n¡Hola! Welcome to your travel planning assistant. To build your personalized, accurate trip report for visiting the United States (EEUU) for 2 weeks on an ordinary Colombian passport, we need to complete our **Spec-Driven Development (SDD) Interview**.\n\nPlease review and answer the following preferences so we can tailor your itinerary, visa checks, routes, and budget:\n\n1. **🏨 Accommodation Preferences**:\n   - **Kind of lodging**: Hostels, hotels, apartments/Airbnb, or guesthouses?\n   - **Room configuration**: Private room or shared dorm room?\n   - **Bathroom**: Private bathroom or shared bathroom?\n   - **Preferred standard**: Preferred star rating (2★, 3★, 4★, boutique) or unrated?\n   - **Max price**: Maximum nightly budget cap (in USD or COP)?\n\n2. **📍 Places & Cities to Visit**:\n   - What specific U.S. cities, regions, or must-see landmarks do you want to explore during your 2 weeks? *(e.g., East Coast like New York & Washington D.C.; West Coast like San Francisco, Los Angeles & Las Vegas; or Florida like Miami & Orlando)*\n   - Do you have a preferred route sequence?\n\n3. **☀️ Preferred Weather & Climate**:\n   - What climate do you prefer for your trip? *(e.g., warm & sunny, mild spring, cool autumn, or winter/snow)*\n   - Any conditions or seasons to avoid?\n\n4. **🗓️ Timing & Traveler Profile**:\n   - What are your approximate travel dates or travel month?\n   - Purpose of travel: Tourism, business/work, or study?\n   - Origin airport in Colombia: Bogotá (`BOG`), Medellín (`MDE`), or another city?\n\nOnce you reply with your preferences, we will freeze your validated `trip-spec` and proceed immediately with visa feasibility (Cancillería / US Visa requirements), route mapping, flight corridors from Colombia, and price scouting!"
         }
       ]
+    },
+    {
+      "id": "tc-002-non-colombian-citizenship-fallback",
+      "name": "Non-Colombian Citizenship Fallback - Must Confirm Citizenship Before Downstream",
+      "description": "User states they are not from Colombia without providing their citizenship ('I am not from Colombia, I want to visit Japan for 10 days'). Verifies that Step 1 halts and asks for their citizenship/passport nationality plus missing SDD fields before searching official permissions.",
+      "category": "sdd_interview_gate",
+      "tags": [
+        "sdd_interview",
+        "citizenship_fallback",
+        "non_colombian",
+        "gate_validation"
+      ],
+      "input": {
+        "user_query": "I am not from Colombia, I want to visit Japan for 10 days",
+        "conversation_turn": 1
+      },
+      "expected_behavior": {
+        "sdd_interview_triggered": true,
+        "proceeded_to_downstream_steps": false,
+        "interview_questions_required": [
+          "citizenship_confirmation",
+          "accommodation",
+          "places_and_cities",
+          "preferred_weather",
+          "timing_and_traveler_profile"
+        ],
+        "missing_fields_identified": [
+          "traveler.passport",
+          "origin",
+          "places_to_visit",
+          "timing.dates",
+          "preferred_weather",
+          "accommodation.kind",
+          "accommodation.room_type",
+          "accommodation.bathroom",
+          "accommodation.stars",
+          "accommodation.max_price_per_night"
+        ],
+        "forbidden_actions_at_this_stage": [
+          "assuming_colombian_passport",
+          "recommending_specific_hotels",
+          "scouting_booking_or_airbnb",
+          "generating_google_maps_routes",
+          "calculating_final_budget"
+        ]
+      },
+      "eval_rubric": {
+        "must_contain_keywords": [
+          "Interview",
+          "Citizenship",
+          "Accommodation",
+          "Cities",
+          "Weather",
+          "Timing"
+        ],
+        "must_not_contain_patterns": [
+          "booking.com",
+          "airbnb.com",
+          "google.com/maps/dir"
+        ]
+      },
+      "executions": []
     }
   ]
 }

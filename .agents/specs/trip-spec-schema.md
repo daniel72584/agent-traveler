@@ -11,8 +11,8 @@ Every travel plan must be anchored by a validated `trip-spec` before launching i
 |---|---|---|---|
 | `spec_version` | String | Yes | Version of specification schema (e.g., `1.0`). |
 | `status` | String | Yes | `draft` \| `interviewing` \| `validated`. |
-| `traveler_profile` | Object | Yes | Nationality (ordinary Colombian passport), party size, travel purpose (tourism / work / study). |
-| `origin` | String | Yes | Departure city/airport in Colombia (e.g., `BOG - Bogotá`, `MDE - Medellín`). |
+| `traveler_profile` | Object | Yes | Confirmed citizenship/passport (e.g., `Colombian Ordinary`, `Mexican Ordinary`), party size, travel purpose (tourism / work / study). |
+| `origin` | String | Yes | Departure city/airport (e.g., `BOG - Bogotá`, `MDE - Medellín`, or international origin for non-Colombian travelers). |
 | `places_to_visit` | List[String] | Yes | Target destinations, specific cities, regions, and must-see attractions. |
 | `timing` | Object | Yes | Travel dates, month, or season, plus total duration in days. |
 | `preferred_weather` | String | Yes | Desired climate (e.g., `warm & sunny`, `mild / spring`, `cool / autumn`, `snow / winter`, `avoid rain`). |
@@ -37,6 +37,10 @@ When a user submits a travel request that lacks these core fields, the primary a
 ### ✈️ Trip Specification Interview (SDD)
 
 To build your personalized, accurate trip report, let's establish your **Trip Spec**:
+
+0. **🛂 Citizenship Confirmation (First Step)**:
+   - Are you from Colombia (holding an ordinary Colombian passport)?
+   - If **not**, please provide your **citizenship / passport nationality** so we can look up the right official immigration and visa permissions page for your nationality.
 
 1. **🏨 Accommodation Preferences**:
    - **Type**: Do you prefer hotels, hostels, apartments/Airbnb, or guesthouses?

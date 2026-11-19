@@ -14,7 +14,7 @@
       "description": "Progressive 3-turn interview reaches a complete, validated trip-spec before 10 attempts.",
       "turns": [
         "i wanna visit EEUU for 2 weeks",
-        "I want to visit New York and Miami for tourism, flying from Bogotá in November 2026.",
+        "I am a Colombian citizen. I want to visit New York and Miami for tourism, flying from Bogotá in November 2026.",
         "I prefer warm & sunny weather, staying in a 3 stars hotel with private room and private bathroom, max 80 USD per night."
       ],
       "expected_status": "validated",
@@ -37,6 +37,17 @@
       ],
       "expected_status": "failed_max_attempts",
       "expected_attempts": 10
+    },
+    {
+      "id": "builder-04-non-colombian-citizenship-fallback",
+      "description": "User states they are not from Colombia without giving citizenship on Turn 1; Builder keeps passport missing until user provides citizenship (Mexican) and completes SDD.",
+      "turns": [
+        "I am not from Colombia, I want to visit Japan for 10 days",
+        "I am a Mexican citizen flying from Mexico City in November 2026 for tourism, looking for mild autumn weather.",
+        "I want a 3 stars hotel with private room and private bathroom, max 90 USD per night, visiting Tokyo and Kyoto."
+      ],
+      "expected_status": "validated",
+      "expected_attempts": 3
     }
   ]
 }

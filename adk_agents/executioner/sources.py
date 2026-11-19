@@ -96,6 +96,80 @@ class LiveCancilleriaUrlSource:
         return None
 
 
+class NonColombianCitizenshipPolicySource:
+    """Fallback Data Source that resolves official foreign-ministry & immigration portals for non-Colombian citizens."""
+
+    _CITIZENSHIP_PORTALS: dict[str, tuple[str, str]] = {
+        "mexican": ("Secretaría de Relaciones Exteriores (Guía del Viajero)", "https://guiadelviajero.sre.gob.mx/"),
+        "spanish": ("Ministerio de Asuntos Exteriores de España", "https://www.exteriores.gob.es/es/ServiciosAlCiudadano/Paginas/Recomendaciones-de-viaje.aspx"),
+        "us": ("U.S. Department of State (Travel.State.Gov)", "https://travel.state.gov/content/travel/en/international-travel.html"),
+        "american": ("U.S. Department of State (Travel.State.Gov)", "https://travel.state.gov/content/travel/en/international-travel.html"),
+        "canadian": ("Government of Canada Travel Advice", "https://travel.gc.ca/travelling/advisories"),
+        "british": ("UK Foreign, Commonwealth & Development Office", "https://www.gov.uk/foreign-travel-advice"),
+        "argentine": ("Cancillería Argentina", "https://www.cancilleria.gob.ar/es/servicios/viajar-al-exterior"),
+        "chilean": ("Ministerio de Relaciones Exteriores de Chile", "https://www.chile.gob.cl/"),
+        "peruvian": ("Ministerio de Relaciones Exteriores del Perú", "https://www.gob.pe/rree"),
+        "ecuadorian": ("Ministerio de Relaciones Exteriores del Ecuador", "https://www.cancilleria.gob.ec/"),
+        "brazilian": ("Ministério das Relações Exteriores (Itamaraty)", "https://www.gov.br/mre/"),
+        "french": ("Ministère de l'Europe et des Affaires étrangères", "https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/"),
+        "german": ("Auswärtiges Amt", "https://www.auswaertiges-amt.de/de/ReiseUndSicherheit"),
+        "italian": ("Ministero degli Affari Esteri (Viaggiare Sicuri)", "https://www.viaggiaresicuri.it/"),
+        "japanese": ("Ministry of Foreign Affairs of Japan", "https://www.anzen.mofa.go.jp/"),
+    }
+
+    _DESTINATION_IMMIGRATION_PORTALS: tuple[tuple[tuple[str, ...], str], ...] = (
+        (("tokyo", "kyoto", "osaka", "japan", "japón"), "https://www.mofa.go.jp/j_info/visit/visa/"),
+        (("new york", "miami", "orlando", "los angeles", "san francisco", "usa", "eeuu", "washington", "boston", "chicago", "las vegas"), "https://travel.state.gov/content/travel/en/us-visas.html"),
+        (("madrid", "barcelona", "paris", "rome", "budapest", "hungary", "slovakia", "vienna", "prague", "berlin", "amsterdam", "lisbon", "spain", "france", "italy", "schengen"), "https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/visa-policy_en"),
+        (("london", "uk", "united kingdom", "edinburgh", "manchester"), "https://www.gov.uk/check-uk-visa"),
+    )
+
+    @classmethod
+    def resolve_policy(
+        cls,
+        passport: str,
+        places_to_visit: list[str],
+        purpose: str = "Tourism",
+    ) -> dict[str, Any]:
+        norm_passport = (passport or "").strip()
+        lower_passport = norm_passport.lower()
+
+        portal_name = f"Official Foreign Ministry / Immigration Portal ({norm_passport})"
+        portal_url = ""
+        for key, (name, url) in cls._CITIZENSHIP_PORTALS.items():
+            if key in lower_passport:
+                portal_name = name
+                portal_url = url
+                break
+
+        if not portal_url:
+            joined_places = " ".join(places_to_visit).lower()
+            for keywords, dest_url in cls._DESTINATION_IMMIGRATION_PORTALS:
+                if any(kw in joined_places for kw in keywords):
+                    portal_url = dest_url
+                    portal_name = "Official Destination Immigration Portal"
+                    break
+
+        if not portal_url:
+            dest_label = quote_plus(" ".join(places_to_visit) or "destination")
+            passport_label = quote_plus(norm_passport or "passport")
+            portal_url = f"https://www.iatatravelcentre.com/passport-visa-health-travel-document-requirements.htm?dest={dest_label}&nat={passport_label}"
+
+        places_label = ", ".join(places_to_visit) if places_to_visit else "selected destination"
+        return {
+            "is_entry_feasible": True,
+            "visa_status": (
+                f"Citizenship Fallback ({norm_passport}): Verify entry & visa permissions for {places_label} "
+                f"({purpose}) via {portal_name}."
+            ),
+            "permitted_stay": f"Verify permitted short-stay duration for {norm_passport} holders on {portal_name}.",
+            "passport_validity": "Minimum 6 months validity required from departure date.",
+            "health_and_vaccines": "Verify destination health/vaccine requirements and travel medical insurance.",
+            "layovers_and_transit": f"Check transit visa requirements for layover hubs based on {norm_passport} rules.",
+            "official_source": portal_url,
+        }
+
+
 class LiveExchangeRateSource:
     """Data Source that fetches live USD->COP exchange rates with timestamp."""
 

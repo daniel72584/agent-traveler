@@ -47,8 +47,11 @@ def mock_sdd_interview_response() -> tuple[str, list[dict[str, Any]]]:
     """Generates an authentic mock SDD interview response for dry-run validation."""
     response = (
         "### ✈️ Trip Specification Interview (SDD)\n"
-        "To build your personalized, accurate trip report for your trip to the USA, "
-        "please confirm your travel preferences:\n\n"
+        "To build your personalized, accurate trip report, "
+        "please confirm your citizenship and travel preferences:\n\n"
+        "0. **🛂 Citizenship Confirmation (First Step)**:\n"
+        "   - Are you from Colombia (holding an ordinary Colombian passport)?\n"
+        "   - If not, please provide your **citizenship / passport nationality** so we can search the right official permissions page.\n\n"
         "1. **🏨 Accommodation Preferences**:\n"
         "   - Kind of lodging: Hostels, hotels, apartments/Airbnb, or guesthouses?\n"
         "   - Room configuration: Private room or shared dorm room?\n"

@@ -6,7 +6,11 @@ MAX_SDD_ATTEMPTS = 10
 
 SDD_INTERVIEW_TEMPLATE = """### ✈️ Trip Specification Interview (SDD)
 
-To build your personalized, accurate trip report on an ordinary Colombian passport, please confirm your travel preferences:
+To build your personalized, accurate trip report, please confirm your citizenship and travel preferences:
+
+0. **🛂 Citizenship Confirmation (First Step)**:
+   - **Are you from Colombia (holding an ordinary Colombian passport)?**
+   - If **not**, please provide your **citizenship / passport nationality** so we can search the right official immigration and visa permissions page for your country.
 
 1. **🏨 Accommodation Preferences**:
    - **Kind of lodging**: Hostels, hotels, apartments/Airbnb, or guesthouses?
@@ -29,13 +33,14 @@ To build your personalized, accurate trip report on an ordinary Colombian passpo
    - Origin airport in Colombia (Bogotá `BOG`, Medellín `MDE`, Cali `CLO`, etc.)?"""
 
 
-BUILDER_SYSTEM_INSTRUCTION = f"""You are the **Builder Agent** (Spec-Driven Development Interviewer) for Agent Traveler, serving travelers holding ordinary Colombian passports.
+BUILDER_SYSTEM_INSTRUCTION = f"""You are the **Builder Agent** (Spec-Driven Development Interviewer) for Agent Traveler.
 
 Your sole responsibility is to conduct the interactive **SDD Interview** and build a complete, validated `trip-spec` contract within a maximum of **{MAX_SDD_ATTEMPTS} attempts**.
 
 ## Mandatory Rules
 1. **Always Call `update_and_validate_trip_spec` First**:
-   - On every user message (including follow-up refinement turns after initial validation), extract any stated travel parameters (`origin`, `places_to_visit`, `route_order`, `dates`, `duration_days`, `purpose`, `traveler_count`, `preferred_weather`, `accommodation_kind`, `accommodation_room_type`, `accommodation_bathroom`, `accommodation_stars`, `accommodation_max_price_per_night`, and `activity_style`).
+   - **First Step — Citizenship Check & Non-Colombian Fallback**: Confirm whether the traveler is from Colombia (ordinary Colombian passport). If the user states they are **not from Colombia**, require them to provide their **citizenship / passport nationality** before validating the spec (pass `passport` as `"Colombian Ordinary"` or `"<Nationality> Ordinary"`, e.g. `"Mexican Ordinary"`). Do NOT assume Colombian citizenship if unconfirmed or negated.
+   - On every user message (including follow-up refinement turns after initial validation), extract any stated travel parameters (`passport`, `origin`, `places_to_visit`, `route_order`, `dates`, `duration_days`, `purpose`, `traveler_count`, `preferred_weather`, `accommodation_kind`, `accommodation_room_type`, `accommodation_bathroom`, `accommodation_stars`, `accommodation_max_price_per_night`, and `activity_style`).
    - Do NOT invent missing SDD categories (such as guessing budget, dates, or room type when not stated).
    - **Creative Destination & Zone Curation**:
      - If the user only mentions a broad country/region (e.g., "EEUU", "USA", "Europe") on Turn 1 without asking for suggestions and while other SDD fields are missing, ask which cities/zones they want to explore (and offer creative ideas in your interview message).

@@ -155,3 +155,27 @@ async def test_builder_enforces_10_max_attempts_limit() -> None:
     assert "accommodation.bathroom" in responses[-1]
     assert "accommodation.max_price_per_night" in responses[-1]
 
+
+@pytest.mark.asyncio
+async def test_builder_non_colombian_citizenship_fallback() -> None:
+    """Verifies that a non-Colombian user must provide their citizenship before SDD validates."""
+    fixtures = json.loads(FIXTURES_FILE.read_text(encoding="utf-8"))
+    scenario = fixtures["scenarios"][3]
+
+    # Turn 1 alone: user says "not from Colombia" without giving citizenship -> must NOT default to Colombian
+    responses_t1, state_t1 = await run_builder_conversation(scenario["turns"][:1], offline=True)
+    assert state_t1.get("sdd_status") == "interviewing"
+    assert state_t1["trip_spec"]["traveler"]["passport"] is None
+    assert "traveler.passport" in responses_t1[0]
+    assert "citizenship" in responses_t1[0].lower()
+
+    # Full 3-turn conversation: user provides Mexican citizenship -> validates with Mexican Ordinary
+    responses, state = await run_builder_conversation(scenario["turns"], offline=True)
+    assert state.get("sdd_status") == "validated"
+    assert state.get("sdd_attempt_count") == 3
+    spec = state["trip_spec"]
+    assert spec["traveler"]["passport"] == "Mexican Ordinary"
+    assert spec["origin"] == "Mexico City"
+    assert spec["destinations"]["places_to_visit"] == ["Tokyo", "Kyoto"]
+
+

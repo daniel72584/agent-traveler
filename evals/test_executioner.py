@@ -125,6 +125,25 @@ async def test_executioner_generates_complete_report_from_valid_spec() -> None:
 
 
 @pytest.mark.asyncio
+async def test_executioner_non_colombian_uses_citizenship_official_portal() -> None:
+    """Verifies that Executioner routes non-Colombian passports to their citizenship's official portal, not Cancillería."""
+    fixtures = json.loads(SPEC_FIXTURES_FILE.read_text(encoding="utf-8"))
+    mexican_spec = copy.deepcopy(fixtures["valid_japan_spec"])
+    mexican_spec["trip_spec"]["traveler"]["passport"] = "Mexican Ordinary"
+    mexican_spec["trip_spec"]["origin"] = "Mexico City"
+
+    response_text, mex_state = await run_executioner_with_payload(json.dumps(mexican_spec), offline=True)
+
+    for header in REQUIRED_REPORT_HEADERS:
+        assert header in response_text, f"Missing required report section: {header}"
+
+    assert "Mexican Ordinary" in response_text
+    assert "https://guiadelviajero.sre.gob.mx/" in response_text
+    assert "cancilleria.gov.co" not in response_text.lower()
+    assert mex_state["trip_report"]["visa_feasibility"]["is_entry_feasible"] is True
+
+
+@pytest.mark.asyncio
 async def test_executioner_flags_work_purpose_hard_stop() -> None:
     """Verifies that Executioner flags `is_entry_feasible=False` when purpose is Work."""
     fixtures = json.loads(SPEC_FIXTURES_FILE.read_text(encoding="utf-8"))
