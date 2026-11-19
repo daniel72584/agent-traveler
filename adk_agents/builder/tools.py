@@ -25,6 +25,7 @@ extract_fields_from_text_heuristic = HeuristicSpecExtractor.extract
 
 def update_and_validate_trip_spec(
     origin: Optional[str] = None,
+    passport: Optional[str] = None,
     places_to_visit: Optional[list[str]] = None,
     route_order: Optional[list[str]] = None,
     dates: Optional[str] = None,
@@ -44,6 +45,7 @@ def update_and_validate_trip_spec(
     state: dict[str, Any] = tool_context.state if tool_context is not None else {}
     patch = TripSpecPatch(
         origin=origin,
+        passport=passport,
         places_to_visit=places_to_visit,
         route_order=route_order,
         dates=dates,

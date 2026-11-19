@@ -16,9 +16,9 @@ from pydantic import BaseModel, Field, field_validator
 class TravelerProfile(BaseModel):
     """Traveler identity and trip purpose."""
 
-    passport: str = Field(
-        default="Colombian Ordinary",
-        description="Nationality and passport type (default: ordinary Colombian passport).",
+    passport: str | None = Field(
+        default=None,
+        description="Confirmed nationality and passport type (e.g., 'Colombian Ordinary', 'Mexican Ordinary').",
     )
     count: int = Field(
         default=1,
@@ -92,6 +92,7 @@ class TripSpecPatch(BaseModel):
     """
 
     origin: str | None = None
+    passport: str | None = None
     places_to_visit: list[str] | None = None
     route_order: list[str] | None = None
     dates: str | None = None
@@ -108,6 +109,7 @@ class TripSpecPatch(BaseModel):
 
     @field_validator(
         "origin",
+        "passport",
         "dates",
         "purpose",
         "preferred_weather",
@@ -145,6 +147,7 @@ class TripSpecPatch(BaseModel):
 # Declarative mapping from `TripSpecPatch` attribute -> `(nested_object_attr | None, target_attr)`
 _PATCH_TARGET_MAP: dict[str, tuple[str | None, str]] = {
     "origin": (None, "origin"),
+    "passport": ("traveler", "passport"),
     "places_to_visit": ("destinations", "places_to_visit"),
     "route_order": ("destinations", "route_order"),
     "dates": ("timing", "dates"),
@@ -162,6 +165,7 @@ _PATCH_TARGET_MAP: dict[str, tuple[str | None, str]] = {
 
 # Declarative table of `(public_missing_field_name, attribute_path)` for SDD completeness checks
 _REQUIRED_SDD_FIELDS: tuple[tuple[str, str], ...] = (
+    ("traveler.passport", "traveler.passport"),
     ("origin", "origin"),
     ("places_to_visit", "destinations.places_to_visit"),
     ("timing.dates", "timing.dates"),

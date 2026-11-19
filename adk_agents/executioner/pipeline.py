@@ -56,6 +56,7 @@ class TravelExecutionPipeline:
         visa_data = check_cancilleria_visa_policy(
             places_to_visit=spec.destinations.places_to_visit,
             purpose=spec.traveler.purpose or "Tourism",
+            passport=spec.traveler.passport or "Colombian Ordinary",
         )
         route_data = build_route_and_climate_plan(
             places_to_visit=spec.destinations.route_order or spec.destinations.places_to_visit,

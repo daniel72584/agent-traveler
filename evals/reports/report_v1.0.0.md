@@ -1,15 +1,15 @@
 # Evaluation Report: v1.0.0
 
 - **Version**: `v1.0.0`
-- **Timestamp**: 2026-10-27 02:00:37 UTC
-- **Summary**: 1/1 tests passed
+- **Timestamp**: 2026-11-19 00:03:04 UTC
+- **Summary**: 2/2 tests passed
 
 ---
 
 ## Test Case: `tc-001-usa-2-weeks-incomplete-interview`
 - **Name**: USA 2-Week Trip - Incomplete Spec Triggers SDD Interview
-- **Status**: `PASSED` (5.43s)
-- **Execution Mode**: `antigravity_sdk (gemini-3.5-flash-lite)`
+- **Status**: `PASSED` (0.0s)
+- **Execution Mode**: `mock`
 - **Input Prompt**: `i wanna visit EEUU for 2 weeks`
 
 ### Rubric Verification
@@ -24,32 +24,78 @@
 
 ```markdown
 ### ✈️ Trip Specification Interview (SDD)
+To build your personalized, accurate trip report, please confirm your citizenship and travel preferences:
 
-¡Hola! Welcome to your travel planning assistant. To build your personalized, accurate trip report for visiting the United States (EEUU) for 2 weeks on an ordinary Colombian passport, we need to complete our **Spec-Driven Development (SDD) Interview**.
-
-Please review and answer the following preferences so we can tailor your itinerary, visa checks, routes, and budget:
+0. **🛂 Citizenship Confirmation (First Step)**:
+   - Are you from Colombia (holding an ordinary Colombian passport)?
+   - If not, please provide your **citizenship / passport nationality** so we can search the right official permissions page.
 
 1. **🏨 Accommodation Preferences**:
-   - **Kind of lodging**: Hostels, hotels, apartments/Airbnb, or guesthouses?
-   - **Room configuration**: Private room or shared dorm room?
-   - **Bathroom**: Private bathroom or shared bathroom?
-   - **Preferred standard**: Preferred star rating (2★, 3★, 4★, boutique) or unrated?
-   - **Max price**: Maximum nightly budget cap (in USD or COP)?
+   - Kind of lodging: Hostels, hotels, apartments/Airbnb, or guesthouses?
+   - Room configuration: Private room or shared dorm room?
+   - Bathroom: Private bathroom or shared bathroom?
+   - Preferred standard: Preferred star rating (2★, 3★, 4★, boutique) or unrated?
+   - Max price: Maximum nightly budget cap (in COP or USD)?
 
 2. **📍 Places & Cities to Visit**:
-   - What specific U.S. cities, regions, or must-see landmarks do you want to explore during your 2 weeks? *(e.g., East Coast like New York & Washington D.C.; West Coast like San Francisco, Los Angeles & Las Vegas; or Florida like Miami & Orlando)*
+   - What specific cities, towns, or must-see landmarks do you want to explore?
    - Do you have a preferred route sequence?
 
 3. **☀️ Preferred Weather & Climate**:
-   - What climate do you prefer for your trip? *(e.g., warm & sunny, mild spring, cool autumn, or winter/snow)*
-   - Any conditions or seasons to avoid?
+   - What climate do you prefer (warm & sunny, mild spring, cool autumn, snow/winter)?
+   - Any conditions to avoid (rainy season, high heat/humidity)?
 
 4. **🗓️ Timing & Traveler Profile**:
-   - What are your approximate travel dates or travel month?
-   - Purpose of travel: Tourism, business/work, or study?
-   - Origin airport in Colombia: Bogotá (`BOG`), Medellín (`MDE`), or another city?
+   - Approximate travel dates or travel month, and duration (e.g. 2 weeks)?
+   - Purpose of travel (Tourism, work, study)?
+   - Origin in Colombia (Bogotá BOG, Medellín MDE, etc.)?
+```
 
-Once you reply with your preferences, we will freeze your validated `trip-spec` and proceed immediately with visa feasibility (Cancillería / US Visa requirements), route mapping, flight corridors from Colombia, and price scouting!
+---
+
+## Test Case: `tc-002-non-colombian-citizenship-fallback`
+- **Name**: Non-Colombian Citizenship Fallback - Must Confirm Citizenship Before Downstream
+- **Status**: `PASSED` (0.0s)
+- **Execution Mode**: `mock`
+- **Input Prompt**: `I am not from Colombia, I want to visit Japan for 10 days`
+
+### Rubric Verification
+- **Keywords Matched**: Interview, Citizenship, Accommodation, Cities, Weather, Timing
+- **Keywords Missing**: None
+- **Forbidden Patterns Found**: None
+- **Forbidden Tool Calls**: None
+- **Interview Triggered**: `True`
+- **Proceeded to Downstream Steps**: `False`
+
+### Full Agent Response
+
+```markdown
+### ✈️ Trip Specification Interview (SDD)
+To build your personalized, accurate trip report, please confirm your citizenship and travel preferences:
+
+0. **🛂 Citizenship Confirmation (First Step)**:
+   - Are you from Colombia (holding an ordinary Colombian passport)?
+   - If not, please provide your **citizenship / passport nationality** so we can search the right official permissions page.
+
+1. **🏨 Accommodation Preferences**:
+   - Kind of lodging: Hostels, hotels, apartments/Airbnb, or guesthouses?
+   - Room configuration: Private room or shared dorm room?
+   - Bathroom: Private bathroom or shared bathroom?
+   - Preferred standard: Preferred star rating (2★, 3★, 4★, boutique) or unrated?
+   - Max price: Maximum nightly budget cap (in COP or USD)?
+
+2. **📍 Places & Cities to Visit**:
+   - What specific cities, towns, or must-see landmarks do you want to explore?
+   - Do you have a preferred route sequence?
+
+3. **☀️ Preferred Weather & Climate**:
+   - What climate do you prefer (warm & sunny, mild spring, cool autumn, snow/winter)?
+   - Any conditions to avoid (rainy season, high heat/humidity)?
+
+4. **🗓️ Timing & Traveler Profile**:
+   - Approximate travel dates or travel month, and duration (e.g. 2 weeks)?
+   - Purpose of travel (Tourism, work, study)?
+   - Origin in Colombia (Bogotá BOG, Medellín MDE, etc.)?
 ```
 
 ---

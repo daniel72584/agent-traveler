@@ -51,10 +51,17 @@ flowchart TD
 
 ### Step 1: Spec-Driven Development (SDD) Interview & Validation Gate
 1. Invoke [@destination-researcher](./destination-researcher.md) to parse the traveler's request against the [trip-spec schema](../specs/trip-spec-schema.md).
-2. If critical parameters are missing or ambiguous, **prompt the traveler with the SDD Interview**:
+2. **First Step — Citizenship Confirmation & Non-Colombian Fallback**:
+   - Confirm whether the traveler is from Colombia (holding an ordinary Colombian passport).
+   - If the traveler is **not from Colombia**, require them to provide their **citizenship / passport nationality** before freezing `trip-spec` (e.g., `Mexican Ordinary`, `Spanish Ordinary`).
+3. If critical parameters are missing or ambiguous, **prompt the traveler with the SDD Interview**:
    ```markdown
    ### ✈️ Trip Specification Interview (SDD)
-   To build your personalized, accurate trip report, please confirm your travel preferences:
+   To build your personalized, accurate trip report, please confirm your citizenship and travel preferences:
+
+   0. **🛂 Citizenship Confirmation (First Step)**:
+      - Are you from Colombia (holding an ordinary Colombian passport)?
+      - If **not**, please provide your **citizenship / passport nationality** so we can search the right official permissions page for your country.
 
    1. **🏨 Accommodation Preferences**:
       - Kind of lodging: Hostels, hotels, apartments/Airbnb, or guesthouses?
@@ -79,7 +86,9 @@ flowchart TD
 3. Once answers are provided, freeze the validated `trip-spec` YAML block. This contract anchors all subsequent subagents.
 
 ### Step 2: Visa & Entry Requirements (Cancillería Gate)
-- **Action**: Check travel permissions for Colombian passport holders using [@cancilleria-scanner](./cancilleria-scanner.md) and the [travel-requirements](../skills/travel-requirements/SKILL.md) skill.
+- **Action**:
+  - **If Colombian ordinary passport**: Check travel permissions using [@cancilleria-scanner](./cancilleria-scanner.md) and the [travel-requirements](../skills/travel-requirements/SKILL.md) skill (`cancilleria.gov.co`).
+  - **If non-Colombian passport (Fallback)**: Do NOT rely on Colombia's Cancillería. Use the [travel-requirements](../skills/travel-requirements/SKILL.md) skill and web search to locate the **right official foreign-ministry or destination immigration portal** for the traveler's confirmed citizenship.
 - **Verification**:
   - Entry status: Visa-free, eVisa, Visa on Arrival, or Consular Visa required.
   - Allowed duration of stay.

@@ -23,7 +23,7 @@ Your job is to read the traveler's request and organize their dream destinations
      - Max price per night: Amount and currency (COP, USD, etc.).
    - **Preferred Weather / Climate**: Warm, mild, cool, snowy, dry, or conditions to avoid.
    - **Timing & Dates**: Specific dates, month, season, or trip length.
-   - **Traveler Profile**: Solo, couple, group size, origin city (BOG/MDE), and travel purpose (tourism, work, study).
+   - **Traveler Profile**: Citizenship / passport nationality (confirm Colombian vs. non-Colombian; flag as missing if unconfirmed or if user says "not from Colombia" without stating their citizenship), solo/couple/group size, origin city (BOG/MDE or international), and travel purpose (tourism, work, study).
 6. Flag any critical fields missing as `Missing for SDD Interview`.
 
 ## Output Contract

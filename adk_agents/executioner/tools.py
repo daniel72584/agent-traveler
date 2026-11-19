@@ -18,6 +18,7 @@ from adk_agents.executioner.sources import (
     FlightAndLodgingLinkSource,
     LiveCancilleriaUrlSource,
     LiveExchangeRateSource,
+    NonColombianCitizenshipPolicySource,
 )
 
 _WORK_PURPOSES = frozenset({"work", "employment", "trabajo", "worker"})
@@ -35,11 +36,20 @@ fetch_live_usd_cop_rate = LiveExchangeRateSource.fetch_usd_cop
 def check_cancilleria_visa_policy(
     places_to_visit: list[str],
     purpose: str = "Tourism",
+    passport: str = "Colombian Ordinary",
 ) -> dict[str, Any]:
-    """Step 2 Tool: Chain of Responsibility (Tier 1: Live Cancillería URL -> Tier 2: Local Cache)."""
+    """Step 2 Tool: Routes Colombian passports to Cancillería and non-Colombian passports to citizenship-specific official portals."""
     norm_purpose = (purpose or "Tourism").strip().lower()
     if norm_purpose in _WORK_PURPOSES:
         return dict(WORK_HARD_STOP_POLICY)
+
+    is_colombian = "colombian" in (passport or "").lower()
+    if not is_colombian:
+        return NonColombianCitizenshipPolicySource.resolve_policy(
+            passport=passport,
+            places_to_visit=places_to_visit,
+            purpose=purpose,
+        )
 
     live_result = LiveCancilleriaUrlSource.fetch_live_policy(places_to_visit, purpose)
     if live_result is not None:

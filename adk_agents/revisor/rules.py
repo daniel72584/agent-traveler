@@ -170,24 +170,32 @@ class ReportStructureRule(SddComplianceRule):
 
 
 class VisaCancilleriaRule(SddComplianceRule):
-    """Gate 3: Verifies official Cancillería citation and 6-month passport validity rule."""
+    """Gate 3: Verifies official visa source citation (Cancillería for Colombians, or official citizenship/immigration portal otherwise) and 6-month passport validity."""
 
     check_name = "visa_cancilleria_gate"
 
     def evaluate(self, ctx: AuditContext) -> RuleEvaluation:
-        has_cancilleria = "cancilleria.gov.co" in ctx.lower_markdown
+        is_colombian = "colombian" in (ctx.spec.traveler.passport or "").lower()
         has_validity = "6 months" in ctx.lower_markdown or "6 meses" in ctx.lower_markdown
-        passed = has_cancilleria and has_validity
+
+        if is_colombian:
+            has_source = "cancilleria.gov.co" in ctx.lower_markdown
+            source_label = "cancilleria.gov.co"
+        else:
+            has_source = bool(re.search(r"Official Source.*https://", ctx.report_markdown, re.IGNORECASE))
+            source_label = "official citizenship/immigration portal URL"
+
+        passed = has_source and has_validity
         details = (
-            "Official Cancillería source and 6-month passport validity rule verified."
+            f"Official visa source ({source_label}) and 6-month passport validity rule verified."
             if passed
-            else "Missing official cancilleria.gov.co citation or 6-month passport validity rule."
+            else f"Missing {source_label} citation or 6-month passport validity rule."
         )
         violations = (
             []
             if passed
             else [
-                "Report lacks official cancilleria.gov.co source link or 6-month passport validity verification."
+                f"Report lacks {source_label} link or 6-month passport validity verification."
             ]
         )
         return RuleEvaluation(

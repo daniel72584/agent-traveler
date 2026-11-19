@@ -43,6 +43,13 @@ _DECLARATIVE_REGEX_RULES: tuple[RegexFieldRule, ...] = (
         lambda _: "Cali (CLO)",
     ),
     RegexFieldRule(
+        "origin",
+        re.compile(
+            r"\b(?:flying|departing|traveling|travelling)\s+from\s+([A-Z][a-zA-ZÀ-ÿ]+(?:\s+[A-Z][a-zA-ZÀ-ÿ]+){0,2})\b"
+        ),
+        lambda m: m.group(1).strip(),
+    ),
+    RegexFieldRule(
         "purpose",
         re.compile(r"\b(tourism|turismo|vacation|vacaciones|leisure)\b", re.IGNORECASE),
         lambda _: "Tourism",
@@ -165,12 +172,100 @@ _CITY_GAZETTEER: tuple[tuple[str, str], ...] = (
 )
 
 
+_NON_COLOMBIAN_NEGATION_RE = re.compile(
+    r"\b(?:not\s+(?:from\s+)?colombi\w+|no\s+soy\s+(?:de\s+)?colombi\w+)\b",
+    re.IGNORECASE,
+)
+
+_COLOMBIAN_CONFIRM_RE = re.compile(
+    r"\b(?:colombian|colombiano|colombiana|from\s+colombia|de\s+colombia)\b",
+    re.IGNORECASE,
+)
+
+_NATIONALITY_CANONICAL_MAP: tuple[tuple[str, str], ...] = (
+    ("mexican", "Mexican"),
+    ("mexicano", "Mexican"),
+    ("mexicana", "Mexican"),
+    ("mexico", "Mexican"),
+    ("méxico", "Mexican"),
+    ("spanish", "Spanish"),
+    ("español", "Spanish"),
+    ("española", "Spanish"),
+    ("spain", "Spanish"),
+    ("españa", "Spanish"),
+    ("argentine", "Argentine"),
+    ("argentinian", "Argentine"),
+    ("argentino", "Argentine"),
+    ("argentina", "Argentine"),
+    ("chilean", "Chilean"),
+    ("chileno", "Chilean"),
+    ("chilena", "Chilean"),
+    ("chile", "Chilean"),
+    ("peruvian", "Peruvian"),
+    ("peruano", "Peruvian"),
+    ("peruana", "Peruvian"),
+    ("peru", "Peruvian"),
+    ("perú", "Peruvian"),
+    ("ecuadorian", "Ecuadorian"),
+    ("ecuatoriano", "Ecuadorian"),
+    ("ecuador", "Ecuadorian"),
+    ("brazilian", "Brazilian"),
+    ("brasileño", "Brazilian"),
+    ("brazil", "Brazilian"),
+    ("brasil", "Brazilian"),
+    ("american", "US"),
+    ("us citizen", "US"),
+    ("u.s. citizen", "US"),
+    ("canadian", "Canadian"),
+    ("canada", "Canadian"),
+    ("canadá", "Canadian"),
+    ("british", "British"),
+    ("french", "French"),
+    ("german", "German"),
+    ("italian", "Italian"),
+    ("japanese", "Japanese"),
+)
+
+_EXPLICIT_CITIZENSHIP_RE = re.compile(
+    r"\b(?:citizenship|nationality|passport)\s*(?:is|:)?\s*([A-Za-zÀ-ÿ]+)\b",
+    re.IGNORECASE,
+)
+
+
+def _extract_passport(text: str) -> str | None:
+    """Extracts confirmed Colombian or non-Colombian citizenship into a passport label."""
+    # Check non-Colombian nationalities first (in case text says "not from Colombia, I am Mexican")
+    for token, canonical in _NATIONALITY_CANONICAL_MAP:
+        # Avoid matching destination mentions like "visit Japan" unless phrased as identity/origin
+        if token in ("mexico", "méxico", "spain", "españa", "argentina", "chile", "peru", "perú", "ecuador", "brazil", "brasil", "canada", "canadá"):
+            pattern = rf"\b(?:from|de|citizen\s+of|passport\s+from)\s+{re.escape(token)}\b"
+        else:
+            pattern = rf"\b{re.escape(token)}\b"
+        if re.search(pattern, text, re.IGNORECASE):
+            return f"{canonical} Ordinary"
+
+    explicit_match = _EXPLICIT_CITIZENSHIP_RE.search(text)
+    if explicit_match:
+        candidate = explicit_match.group(1).strip()
+        if candidate.lower() not in {"ordinary", "type", "required", "unknown", "none", "colombia", "colombian"}:
+            return f"{candidate.title()} Ordinary"
+
+    if _COLOMBIAN_CONFIRM_RE.search(text) and not _NON_COLOMBIAN_NEGATION_RE.search(text):
+        return "Colombian Ordinary"
+
+    return None
+
+
 class HeuristicSpecExtractor:
     """Data-driven extractor mapping natural language text into a `TripSpecPatch` dict."""
 
     @classmethod
     def extract(cls, text: str) -> dict[str, Any]:
         extracted: dict[str, Any] = {}
+        passport_val = _extract_passport(text)
+        if passport_val:
+            extracted["passport"] = passport_val
+
         for rule in _DECLARATIVE_REGEX_RULES:
             if rule.target_field not in extracted:
                 match = rule.pattern.search(text)
