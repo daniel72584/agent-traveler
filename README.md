@@ -8,6 +8,18 @@ It does not book flights or process payments. Its goal is to deliver an accurate
 
 ---
 
+## Table of Contents
+
+- [Architecture: How It Works](#architecture-how-it-works)
+- [Spec-Driven Development (SDD) Gate](#spec-driven-development-sdd-gate)
+- [ADK Execution (4-Agent A2A Architecture)](#adk-execution-4-agent-a2a-architecture)
+- [Codebase Architecture & Graph Explorer](#codebase-architecture--graph-explorer)
+- [Setup & Running the Evaluation Suite](#setup--running-the-evaluation-suite)
+- [Evals](#evals)
+- [Roadmap](#roadmap)
+
+---
+
 ## Architecture: How It Works
 
 Agent Traveler uses a primary coordinator that delegates tasks to focused specialist agents and tools:
@@ -127,6 +139,52 @@ python -m evals.run_evals --model gemini-3.8-flash --api-key YOUR_KEY
 ```
 
 Every run logs execution history in [`evals/test_cases.json`](evals/test_cases.json) and writes a markdown summary to `evals/reports/report_v<version>.md` (for example, [`evals/reports/report_v1.0.0.md`](evals/reports/report_v1.0.0.md)).
+
+
+---
+
+## Evals
+
+* One problem that came to mind back in this step was: if I create a workflow, agent, and skills, how can I be sure or know that it is really worthy?
+* Well, by testing as a software developer—but here it is different: we can check if the agent touched the right files, called the right tools, and used the information given, but we still need to evaluate its response.
+
+So how can we do it?
+In [`evals/test_visa_failures.py`](evals/test_visa_failures.py) and [`evals/adversarial_critic.py`](evals/adversarial_critic.py) (using cases from [`evals/fixtures/visa-testing.json`](evals/fixtures/visa-testing.json)), we introduced an adversarial test.
+
+**How does it work?**
+* It's simple: using test cases—like prompts that would be used in the workflow (inputs)—and checking what the expectation would be, we can verify behavior and find errors. Indeed, we did it, and you can see it here in [`assets/evals.png`](assets/evals.png):
+
+![Adversarial Evals Execution](assets/evals.png)
+
+Of course, for the evals it is important to define:
+* What is success in my agentic process?
+* Where should it fail?
+* A good comparator and check that helps us identify issues and be critical.
+
+**Example:**
+
+```markdown
+### Universal Evaluation Rules
+1. `rubric_compliant`:
+   - `true` ONLY if `response` satisfies every requirement and respects every negative constraint ("must not", "should not") in `rubric`.
+   - If `response` violates any part of `rubric`, set `rubric_compliant = false` and record the exact violation in `failures`.
+2. `answers_prompt`:
+   - `true` ONLY if `response` directly addresses the user's actual questions and context in `case` (or appropriately asks a prerequisite clarifying question required by `rubric` when the user's question cannot yet be answered).
+   - If `case` asks a specific sub-question (e.g., how/where to obtain a document or perform an action) that `response` completely ignores by dumping an unrelated generic template, set `answers_prompt = false` and explain what was ignored in `failures`.
+3. `coherence_ok`:
+   - `true` if `response` is logically consistent, factually coherent with the premises in `rubric`, and free of self-contradictions.
+4. `clarity_ok`:
+   - `true` if `response` is clear, well-structured, and written in standard English.
+5. `passed`:
+   - Must be `true` ONLY when `rubric_compliant`, `answers_prompt`, `coherence_ok`, and `clarity_ok` are ALL `true`. Otherwise `false`.
+   - When `passed` is `true`, `failures` MUST be an empty list `[]` and `score` should be between 80 and 100.
+```
+
+**And how to run it:**
+
+```bash
+.venv/bin/pytest evals/test_visa_failures.py -v
+```
 
 ---
 
