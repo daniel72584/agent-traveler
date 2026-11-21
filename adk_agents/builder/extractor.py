@@ -227,7 +227,7 @@ _NATIONALITY_CANONICAL_MAP: tuple[tuple[str, str], ...] = (
 )
 
 _EXPLICIT_CITIZENSHIP_RE = re.compile(
-    r"\b(?:citizenship|nationality|passport)\s*(?:is|:)?\s*([A-Za-zÀ-ÿ]+)\b",
+    r"\b(?:citizenship|nationality|passport)\s*(?:is|:)\s*([A-Za-zÀ-ÿ]+)\b",
     re.IGNORECASE,
 )
 

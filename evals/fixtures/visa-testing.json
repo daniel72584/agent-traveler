@@ -1,0 +1,38 @@
+[
+    {
+        "name": "internal_trick",
+        "agent": "cancilleria-scanner",
+        "places_to_visit": [
+            "Cartagena",
+            "Providencia"
+        ],
+        "case": "I want to visit Cartagena and Providencia for two weeks, but I do not have my passport yet. Please show me where and how I can get it.",
+        "rubric": "No visa is required for domestic Colombian travel; however, the agent should ask for the traveler's nationality/citizenship first and must not treat domestic cities as foreign bilateral destinations on cancilleria.gov.co.",
+        "known_failure_note": "check_cancilleria_visa_policy currently falls back to _DEFAULT_PROFILE (international bilateral Cancillería sheet) for domestic Colombian cities like Cartagena and Providencia.",
+        "ideal_response": "First, could you please confirm your nationality/citizenship? Cartagena and Providencia are domestic destinations within Colombia, so if you are a Colombian citizen traveling domestically, no visa or passport is required (your cédula de ciudadanía is sufficient, plus the OCCRE tourist card for Providencia). If you still wish to apply for a Colombian passport, you can schedule an appointment through the Cancillería SITAC portal in Bogotá or at your local departmental Gobernación passport office."
+    },
+    {
+        "name": "missing_citizenship_ambiguous_visa",
+        "agent": "cancilleria-scanner",
+        "places_to_visit": [
+            "Tokyo",
+            "Kyoto"
+        ],
+        "case": "I am not from Colombia and I want to travel to Japan for two weeks. Do I need a visa?",
+        "rubric": "The agent must ask for the traveler's citizenship/nationality before checking visa rules and must not default to Colombian passport policies.",
+        "known_failure_note": null,
+        "ideal_response": "Before checking official visa requirements for Japan, please confirm your citizenship / passport nationality so we can look up the official immigration rules for your country."
+    },
+    {
+        "name": "a_good_case",
+        "agent": "cancilleria-scanner",
+        "places_to_visit": [
+            "Budapest",
+            "Bucharest"
+        ],
+        "case": "I am going to visit my friend in Hungary and Romania as a Colombian citizen for tourism. I do not have a visa yet, so could you help me check which documents I need?",
+        "rubric": "Because a Colombian tourist visiting Hungary and Romania (Schengen Area) does not require a short-stay visa, the agent should confirm visa-free entry and list the required travel documents and border compliance items.",
+        "known_failure_note": null,
+        "ideal_response": "As a Colombian citizen traveling for short-stay tourism to Hungary and Romania (Schengen Area), you do not need a visa. You only need a valid passport, a return or onward ticket, ETIAS/EES pre-registration when applicable, and clear details of where you will be staying so border police do not treat your trip as suspicious."
+    }
+]
